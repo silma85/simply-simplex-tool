@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editmodel:StateDiagramEditModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:editmodel="editmodel.xmi" xmlns:options="options.xmi" name="simplyStateDiagram" id="{UMLID=_G0mQABqnEd6aeolim26dEg}" metadata="uml2-1.0" initialized="true" scrolledY="151" tag="10" key="32303037303632392053696D706C79" ModelName="simplyStateDiagram">
+  <children xsi:type="editmodel:StateStartEditModel" name="Problema inserito" location="75,148" size="16,16" id="{UMLID=_K0U08BqnEd6aeolim26dEg}" itemName="Problema inserito">
+    <sourceConnections xsi:type="editmodel:StateTransitionEditModel" name="Inizio risoluzione" size="2,1" stereotype="" id="{UMLID=_g20J0BqpEd6aeolim26dEg}" source="//@children.0" target="//@children.2" targetEnd="//@children.0/@sourceConnections.0/@children.1" label="//@children.0/@sourceConnections.0/@children.3" sourceEnd="//@children.0/@sourceConnections.0/@children.0" connectionRouterKind="Manhattan" eventName="Inizio risoluzione" condition="" action="" EffectLabel="//@children.0/@sourceConnections.0/@children.2">
+      <children xsi:type="editmodel:StateEndEditModel" location="16,6" attachSource="true"/>
+      <children xsi:type="editmodel:StateEndEditModel" location="0,49"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Risolutore" location="84,166" size="67,16" fontInfo="Arial-8-0" stereotype="StateTransitionEffect" autoLocated="true" automaticRelocationAllowed="false" locationOnWireFromSource="-47.0" distanceFromWire="-37.0" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Inizio risoluzione" location="70,245" size="79,14" fontInfo="Arial-8-0" automaticRelocationAllowed="false" locationOnWireFromSource="31.999999999999996" distanceFromWire="-45.0" anchorKind="MiddlePart"/>
+    </sourceConnections>
+  </children>
+  <children xsi:type="editmodel:LabelObjectEditModel" name="Problema inserito" location="39,132" size="98,15" fontInfo="Omondo_Font_Default-9-0" description="Name" attachment="//@children.0"/>
+  <children xsi:type="editmodel:StateEditModel" targetConnections="//@children.2/@sourceConnections.0 //@children.16/@sourceConnections.0 //@children.0/@sourceConnections.0" name="Inserimento tableau iniziale" backgroundRGB="251,251,251" location="218,240" size="80,71" stereotype="" id="{UMLID=_ZS4wQBqnEd6aeolim26dEg}" itemName="Inserimento tableau iniziale" numberOfThread="1" content="">
+    <children xsi:type="editmodel:CompartmentEditModel" description="region1"/>
+    <sourceConnections xsi:type="editmodel:StateTransitionEditModel" name="Tableau sbagliato" size="2,1" stereotype="" id="{UMLID=_JnJasBqoEd6aeolim26dEg}" source="//@children.2" target="//@children.2" targetEnd="//@children.2/@sourceConnections.0/@children.1" label="//@children.2/@sourceConnections.0/@children.2" sourceEnd="//@children.2/@sourceConnections.0/@children.0" connectionRouterKind="Manhattan" eventName="Tableau sbagliato" condition="" action="">
+      <children xsi:type="editmodel:StateEndEditModel" location="0,9" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:StateEndEditModel" location="38,0" anchorKind="FixedAtEdge"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Tableau sbagliato" location="179,191" size="84,14" fontInfo="Arial-8-0" automaticRelocationAllowed="false" locationOnWireFromSource="28.999999999999996" distanceFromWire="-38.0" anchorKind="MiddlePart"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:StateTransitionEditModel" name="Tableau corretto" size="2,1" stereotype="" id="{UMLID=_eIfX0BqoEd6aeolim26dEg}" source="//@children.2" target="//@children.6" targetEnd="//@children.2/@sourceConnections.1/@children.1" label="//@children.2/@sourceConnections.1/@children.2" sourceEnd="//@children.2/@sourceConnections.1/@children.0" connectionRouterKind="Manhattan" eventName="Tableau corretto" condition="" action="" EffectLabel="//@children.2/@sourceConnections.1/@children.3">
+      <children xsi:type="editmodel:StateEndEditModel" location="80,38" attachSource="true"/>
+      <children xsi:type="editmodel:StateEndEditModel" location="0,20"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Tableau corretto" location="300,221" size="79,14" fontInfo="Arial-8-0" automaticRelocationAllowed="false" locationOnWireFromSource="20.0" distanceFromWire="13.999999999999996" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Procedi" location="300,283" size="55,16" fontInfo="Arial-8-0" stereotype="StateTransitionEffect" autoLocated="true" automaticRelocationAllowed="false" locationOnWireFromSource="-43.0" distanceFromWire="26.0" anchorKind="MiddlePart"/>
+    </sourceConnections>
+  </children>
+  <children xsi:type="editmodel:StateEditModel" targetConnections="//@children.3/@sourceConnections.0 //@children.6/@sourceConnections.1" name="Scelta variabile entrante" backgroundRGB="251,251,251" location="560,221" size="80,63" stereotype="" id="{UMLID=_d0M_UBqnEd6aeolim26dEg}" itemName="Scelta variabile entrante" content="">
+    <sourceConnections xsi:type="editmodel:StateTransitionEditModel" name="Entrante errata" size="2,1" stereotype="" id="{UMLID=_YiEh4BqoEd6aeolim26dEg}" source="//@children.3" target="//@children.3" targetEnd="//@children.3/@sourceConnections.0/@children.1" label="//@children.3/@sourceConnections.0/@children.2" sourceEnd="//@children.3/@sourceConnections.0/@children.0" connectionRouterKind="Manhattan" eventName="Entrante errata" condition="" action="">
+      <children xsi:type="editmodel:StateEndEditModel" location="60,63" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:StateEndEditModel" location="80,19" anchorKind="FixedAtEdge"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Entrante errata" location="546,285" size="72,14" fontInfo="Arial-8-0" automaticRelocationAllowed="false" locationOnWireFromSource="-65.0" distanceFromWire="26.000000000000018" anchorKind="MiddlePart"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:StateTransitionEditModel" name="Entrante corretta" size="2,1" stereotype="" autoLocated="true" id="{UMLID=_K6Pk0BqpEd6aeolim26dEg}" source="//@children.3" target="//@children.8" targetEnd="//@children.3/@sourceConnections.1/@children.1" label="//@children.3/@sourceConnections.1/@children.3" sourceEnd="//@children.3/@sourceConnections.1/@children.0" connectionRouterKind="Manhattan" eventName="Entrante corretta" condition="" action="" EffectLabel="//@children.3/@sourceConnections.1/@children.2">
+      <children xsi:type="editmodel:StateEndEditModel" location="0,10" attachSource="true"/>
+      <children xsi:type="editmodel:StateEndEditModel" location="20,30"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Procedi" location="542,204" size="55,16" fontInfo="Arial-8-0" stereotype="StateTransitionEffect" autoLocated="true" automaticRelocationAllowed="false" locationOnWireFromSource="-24.000000000000004" distanceFromWire="-18.99999999999999" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Entrante corretta" location="443,175" size="81,14" fontInfo="Arial-8-0" automaticRelocationAllowed="false" locationOnWireFromSource="61.99999999999999" distanceFromWire="-48.00000000000001" anchorKind="MiddlePart"/>
+    </sourceConnections>
+  </children>
+  <children xsi:type="editmodel:StateEditModel" targetConnections="//@children.4/@sourceConnections.0 //@children.8/@sourceConnections.0" name="Scelta variabile uscente" backgroundRGB="251,251,251" location="546,28" size="80,62" stereotype="" id="{UMLID=_gAqP0BqnEd6aeolim26dEg}" itemName="Scelta variabile uscente" content="">
+    <sourceConnections xsi:type="editmodel:StateTransitionEditModel" name="Uscente errata" size="2,1" stereotype="" id="{UMLID=_Tcvm0BqoEd6aeolim26dEg}" source="//@children.4" target="//@children.4" targetEnd="//@children.4/@sourceConnections.0/@children.1" label="//@children.4/@sourceConnections.0/@children.2" sourceEnd="//@children.4/@sourceConnections.0/@children.0" connectionRouterKind="Manhattan" eventName="Uscente errata" condition="" action="">
+      <children xsi:type="editmodel:StateEndEditModel" location="80,46" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:StateEndEditModel" location="80,13" anchorKind="FixedAtEdge"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Uscente errata" location="628,76" size="72,14" fontInfo="Arial-8-0" automaticRelocationAllowed="false" locationOnWireFromSource="-26.0" distanceFromWire="-3.0" anchorKind="MiddlePart"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:StateTransitionEditModel" name="Uscente corretta" size="2,1" stereotype="" autoLocated="true" id="{UMLID=_UJm3YBqpEd6aeolim26dEg}" source="//@children.4" target="//@children.5" targetEnd="//@children.4/@sourceConnections.1/@children.1" label="//@children.4/@sourceConnections.1/@children.2" sourceEnd="//@children.4/@sourceConnections.1/@children.0" connectionRouterKind="Manhattan" eventName="Uscente corretta" condition="" action="" EffectLabel="//@children.4/@sourceConnections.1/@children.3">
+      <children xsi:type="editmodel:StateEndEditModel" location="0,31" attachSource="true"/>
+      <children xsi:type="editmodel:StateEndEditModel" location="80,30"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Uscente corretta" location="435,42" size="81,14" fontInfo="Arial-8-0" automaticRelocationAllowed="false" locationOnWireFromSource="13.000000000000002" distanceFromWire="-10.0" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Procedi" location="492,56" size="55,16" fontInfo="Arial-8-0" stereotype="StateTransitionEffect" autoLocated="true" automaticRelocationAllowed="false" locationOnWireFromSource="-30.0" distanceFromWire="5.0" anchorKind="MiddlePart"/>
+    </sourceConnections>
+  </children>
+  <children xsi:type="editmodel:StateEditModel" targetConnections="//@children.5/@sourceConnections.0 //@children.4/@sourceConnections.1" name="Operazioni di pivot" backgroundRGB="251,251,251" location="353,29" size="80,60" stereotype="" id="{UMLID=_l0vuUBqnEd6aeolim26dEg}" itemName="Operazioni di pivot" content="">
+    <sourceConnections xsi:type="editmodel:StateTransitionEditModel" name="Tableau sbagliato" size="2,1" stereotype="" id="{UMLID=_QGSBUBqoEd6aeolim26dEg}" source="//@children.5" target="//@children.5" targetEnd="//@children.5/@sourceConnections.0/@children.1" label="//@children.5/@sourceConnections.0/@children.2" sourceEnd="//@children.5/@sourceConnections.0/@children.0" connectionRouterKind="Manhattan" eventName="Tableau sbagliato" condition="" action="">
+      <children xsi:type="editmodel:StateEndEditModel" location="0,46" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:StateEndEditModel" location="0,18" anchorKind="FixedAtEdge"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Tableau sbagliato" location="268,27" size="84,14" fontInfo="Arial-8-0" automaticRelocationAllowed="false" locationOnWireFromSource="26.000000000000004" distanceFromWire="7.999999999999993" anchorKind="MiddlePart"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:StateTransitionEditModel" name="Tableau corretto" size="2,1" stereotype="" id="{UMLID=_XgwZYBqpEd6aeolim26dEg}" source="//@children.5" target="//@children.6" targetEnd="//@children.5/@sourceConnections.1/@children.1" label="//@children.5/@sourceConnections.1/@children.3" sourceEnd="//@children.5/@sourceConnections.1/@children.0" connectionRouterKind="Manhattan" eventName="Tableau corretto" condition="" action="" EffectLabel="//@children.5/@sourceConnections.1/@children.2">
+      <children xsi:type="editmodel:StateEndEditModel" location="25,60" attachSource="true"/>
+      <children xsi:type="editmodel:StateEndEditModel" location="12,0"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Procedi" location="382,98" size="55,16" fontInfo="Arial-8-0" stereotype="StateTransitionEffect" autoLocated="true" automaticRelocationAllowed="false" locationOnWireFromSource="10.0" distanceFromWire="41.0" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Tableau corretto" location="340,149" size="79,14" fontInfo="Arial-8-0" automaticRelocationAllowed="false" locationOnWireFromSource="-20.0" distanceFromWire="-9.0" anchorKind="MiddlePart"/>
+    </sourceConnections>
+  </children>
+  <children xsi:type="editmodel:ChoicePointEditModel" targetConnections="//@children.2/@sourceConnections.1 //@children.5/@sourceConnections.1" name="Ottimalità" backgroundRGB="251,251,251" location="407,204" size="30,30" id="{UMLID=_r9zXQBqnEd6aeolim26dEg}" itemName="Ottimalità">
+    <sourceConnections xsi:type="editmodel:StateTransitionEditModel" size="2,1" stereotype="" autoLocated="true" id="{UMLID=_AbFeUBqpEd6aeolim26dEg}" source="//@children.6" target="//@children.10" targetEnd="//@children.6/@sourceConnections.0/@children.1" label="//@children.6/@sourceConnections.0/@children.3" sourceEnd="//@children.6/@sourceConnections.0/@children.0" connectionRouterKind="Manhattan" eventName="" condition="" action="" EffectLabel="//@children.6/@sourceConnections.0/@children.2">
+      <children xsi:type="editmodel:StateEndEditModel" location="15,30" attachSource="true"/>
+      <children xsi:type="editmodel:StateEndEditModel" location="15,0"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Sì" location="421,240" size="28,16" fontInfo="Arial-8-0" stereotype="StateTransitionEffect" autoLocated="true" automaticRelocationAllowed="false" locationOnWireFromSource="-36.0" distanceFromWire="15.0" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:WireLabelEditModel" size="0,14" fontInfo="Arial-8-0" anchorKind="MiddlePart"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:StateTransitionEditModel" size="2,1" stereotype="" id="{UMLID=_Gi7mUBqpEd6aeolim26dEg}" source="//@children.6" target="//@children.3" targetEnd="//@children.6/@sourceConnections.1/@children.1" label="//@children.6/@sourceConnections.1/@children.3" sourceEnd="//@children.6/@sourceConnections.1/@children.0" connectionRouterKind="Manhattan" eventName="" condition="" action="" EffectLabel="//@children.6/@sourceConnections.1/@children.2">
+      <children xsi:type="editmodel:StateEndEditModel" location="30,23" attachSource="true"/>
+      <children xsi:type="editmodel:StateEndEditModel" location="0,31"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="No" location="436,196" size="32,16" fontInfo="Arial-8-0" stereotype="StateTransitionEffect" autoLocated="true" automaticRelocationAllowed="false" locationOnWireFromSource="-30.999999999999996" distanceFromWire="-45.0" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:WireLabelEditModel" size="0,14" fontInfo="Arial-8-0" anchorKind="MiddlePart"/>
+    </sourceConnections>
+  </children>
+  <children xsi:type="editmodel:LabelObjectEditModel" name="Ottimalità" location="353,196" size="52,15" fontInfo="Omondo_Font_Default-9-0" description="Name" attachment="//@children.6"/>
+  <children xsi:type="editmodel:ChoicePointEditModel" targetConnections="//@children.3/@sourceConnections.1" name="Boundness" backgroundRGB="251,251,251" location="517,141" size="30,30" id="{UMLID=_t9HjoBqnEd6aeolim26dEg}" itemName="Boundness">
+    <sourceConnections xsi:type="editmodel:StateTransitionEditModel" size="2,1" stereotype="" id="{UMLID=_OEQpwBqpEd6aeolim26dEg}" source="//@children.8" target="//@children.4" targetEnd="//@children.8/@sourceConnections.0/@children.1" label="//@children.8/@sourceConnections.0/@children.3" sourceEnd="//@children.8/@sourceConnections.0/@children.0" connectionRouterKind="Manhattan" eventName="" condition="" action="" EffectLabel="//@children.8/@sourceConnections.0/@children.2">
+      <children xsi:type="editmodel:StateEndEditModel" location="14,1" attachSource="true"/>
+      <children xsi:type="editmodel:StateEndEditModel" location="10,62"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Sì" size="28,16" fontInfo="Arial-8-0" stereotype="StateTransitionEffect" autoLocated="true" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:WireLabelEditModel" size="0,14" fontInfo="Arial-8-0" anchorKind="MiddlePart"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:StateTransitionEditModel" size="2,1" stereotype="" autoLocated="true" id="{UMLID=_Rq6nYBqpEd6aeolim26dEg}" source="//@children.8" target="//@children.12" targetEnd="//@children.8/@sourceConnections.1/@children.1" label="//@children.8/@sourceConnections.1/@children.3" sourceEnd="//@children.8/@sourceConnections.1/@children.0" connectionRouterKind="Manhattan" eventName="" condition="" action="" EffectLabel="//@children.8/@sourceConnections.1/@children.2">
+      <children xsi:type="editmodel:StateEndEditModel" location="30,15" attachSource="true"/>
+      <children xsi:type="editmodel:StateEndEditModel" location="0,10"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="No" location="600,192" size="32,16" fontInfo="Arial-8-0" stereotype="StateTransitionEffect" autoLocated="true" automaticRelocationAllowed="false" locationOnWireFromSource="-36.00000000000001" distanceFromWire="-17.999999999999993" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:WireLabelEditModel" size="0,14" fontInfo="Arial-8-0" anchorKind="MiddlePart"/>
+    </sourceConnections>
+  </children>
+  <children xsi:type="editmodel:LabelObjectEditModel" name="Boundness" location="462,132" size="64,15" fontInfo="Omondo_Font_Default-9-0" description="Name" attachment="//@children.8"/>
+  <children xsi:type="editmodel:ChoicePointEditModel" targetConnections="//@children.6/@sourceConnections.0" backgroundRGB="251,251,251" location="407,335" size="30,30" id="{UMLID=_7cCm4BqnEd6aeolim26dEg}">
+    <sourceConnections xsi:type="editmodel:StateTransitionEditModel" name="Fase Due o semplice" size="2,1" stereotype="" autoLocated="true" id="{UMLID=_54FrYBqoEd6aeolim26dEg}" source="//@children.10" target="//@children.14" targetEnd="//@children.10/@sourceConnections.0/@children.1" label="//@children.10/@sourceConnections.0/@children.2" sourceEnd="//@children.10/@sourceConnections.0/@children.0" connectionRouterKind="Manhattan" eventName="Fase Due o semplice" condition="" action="">
+      <children xsi:type="editmodel:StateEndEditModel" location="30,20" attachSource="true"/>
+      <children xsi:type="editmodel:StateEndEditModel" location="10,0"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Fase Due o semplice" location="445,334" size="100,14" fontInfo="Arial-8-0" automaticRelocationAllowed="false" locationOnWireFromSource="11.0" distanceFromWire="8.000000000000002" anchorKind="MiddlePart"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:StateTransitionEditModel" name="Fase Uno" size="2,1" stereotype="" id="{UMLID=_9wVIQBqoEd6aeolim26dEg}" source="//@children.10" target="//@children.16" targetEnd="//@children.10/@sourceConnections.1/@children.1" label="//@children.10/@sourceConnections.1/@children.2" sourceEnd="//@children.10/@sourceConnections.1/@children.0" connectionRouterKind="Manhattan" eventName="Fase Uno" condition="" action="">
+      <children xsi:type="editmodel:StateEndEditModel" location="0,20" attachSource="true"/>
+      <children xsi:type="editmodel:StateEndEditModel" location="27,15"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Fase Uno" location="353,335" size="46,14" fontInfo="Arial-8-0" automaticRelocationAllowed="false" locationOnWireFromSource="-27.0" distanceFromWire="26.000000000000004" anchorKind="MiddlePart"/>
+    </sourceConnections>
+  </children>
+  <children xsi:type="editmodel:LabelObjectEditModel" location="422,365" size="0,15" fontInfo="Omondo_Font_Default-9-0" description="Name" attachment="//@children.10"/>
+  <children xsi:type="editmodel:EndPointEditModel" targetConnections="//@children.8/@sourceConnections.1" name="Problema illimitato" location="655,146" size="20,20" id="{UMLID=__vG-kBqnEd6aeolim26dEg}" itemName="Problema illimitato"/>
+  <children xsi:type="editmodel:LabelObjectEditModel" name="Problema illimitato" location="614,166" size="103,15" fontInfo="Omondo_Font_Default-9-0" description="Name" attachment="//@children.12"/>
+  <children xsi:type="editmodel:EndPointEditModel" targetConnections="//@children.10/@sourceConnections.0" name="Problema risolto" location="525,386" size="20,20" id="{UMLID=_BFWYwBqoEd6aeolim26dEg}" itemName="Problema risolto"/>
+  <children xsi:type="editmodel:LabelObjectEditModel" name="Problema risolto" location="549,388" size="91,15" fontInfo="Omondo_Font_Default-9-0" description="Name" attachment="//@children.14"/>
+  <children xsi:type="editmodel:ChoicePointEditModel" targetConnections="//@children.10/@sourceConnections.1" name="Ammissibilità" backgroundRGB="251,251,251" location="266,373" size="30,30" id="{UMLID=_F054IBqoEd6aeolim26dEg}" itemName="Ammissibilità">
+    <sourceConnections xsi:type="editmodel:StateTransitionEditModel" name="Problema ammissibile" size="2,1" stereotype="" autoLocated="true" id="{UMLID=_qtd7UBqoEd6aeolim26dEg}" source="//@children.16" target="//@children.2" targetEnd="//@children.16/@sourceConnections.0/@children.1" label="//@children.16/@sourceConnections.0/@children.3" sourceEnd="//@children.16/@sourceConnections.0/@children.0" connectionRouterKind="Manhattan" eventName="Problema ammissibile" condition="" action="" EffectLabel="//@children.16/@sourceConnections.0/@children.2">
+      <children xsi:type="editmodel:StateEndEditModel" location="14,0" attachSource="true"/>
+      <children xsi:type="editmodel:StateEndEditModel" location="62,71"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Sì" location="279,358" size="28,16" fontInfo="Arial-8-0" stereotype="StateTransitionEffect" autoLocated="true" automaticRelocationAllowed="false" locationOnWireFromSource="-24.0" distanceFromWire="-13.999999999999996" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="Problema ammissibile" location="168,318" size="101,14" fontInfo="Arial-8-0" automaticRelocationAllowed="false" locationOnWireFromSource="17.0" distanceFromWire="61.99999999999999" anchorKind="MiddlePart"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:StateTransitionEditModel" size="2,1" stereotype="" autoLocated="true" id="{UMLID=_xZUIQBqoEd6aeolim26dEg}" source="//@children.16" target="//@children.18" targetEnd="//@children.16/@sourceConnections.1/@children.1" label="//@children.16/@sourceConnections.1/@children.3" sourceEnd="//@children.16/@sourceConnections.1/@children.0" connectionRouterKind="Manhattan" eventName="" condition="" action="" EffectLabel="//@children.16/@sourceConnections.1/@children.2">
+      <children xsi:type="editmodel:StateEndEditModel" location="0,4" attachSource="true"/>
+      <children xsi:type="editmodel:StateEndEditModel" location="20,14"/>
+      <children xsi:type="editmodel:WireLabelEditModel" name="No" location="241,391" size="32,16" fontInfo="Arial-8-0" stereotype="StateTransitionEffect" autoLocated="true" automaticRelocationAllowed="false" locationOnWireFromSource="-16.0" distanceFromWire="-23.999999999999996" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:WireLabelEditModel" size="0,14" fontInfo="Arial-8-0" anchorKind="MiddlePart"/>
+    </sourceConnections>
+  </children>
+  <children xsi:type="editmodel:LabelObjectEditModel" name="Ammissibilità" location="280,402" size="75,15" fontInfo="Omondo_Font_Default-9-0" description="Name" attachment="//@children.16"/>
+  <children xsi:type="editmodel:EndPointEditModel" targetConnections="//@children.16/@sourceConnections.1" name="Problema impossibile" location="182,363" size="20,20" id="{UMLID=_ID3qEBqoEd6aeolim26dEg}" itemName="Problema impossibile"/>
+  <children xsi:type="editmodel:LabelObjectEditModel" name="Problema impossibile" location="111,349" size="122,15" fontInfo="Omondo_Font_Default-9-0" description="Name" attachment="//@children.18"/>
+  <diagramOptions xsi:type="options:StateDiagramOptions" level="0" autoName="false"/>
+  <boardSetting snapToGeometry="true" gridEnabled="true" gridSpacing="14,14" gridOrigin="0,0" rulerUnit="cm" gridShow="true">
+    <leftRuler/>
+    <topRuler/>
+  </boardSetting>
+</editmodel:StateDiagramEditModel>
