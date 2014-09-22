@@ -1,5 +1,6 @@
 package it.silma.simply.core;
 
+import it.silma.simply.gui.OriginalProblemFrame;
 import it.silma.simply.utils.Constants;
 
 import java.awt.event.ActionEvent;
@@ -109,21 +110,21 @@ public class Exporter {
         // di ciascuno dei tipi di vincoli. Servira' in seguito.
         for (int i = 0; i < cts.length; i++) {
             if (cts[i].equals(Constants.LessThan)) {
-                blt[lt] = opf.knownValuesVector[i].getCoefficient();
+                blt[lt] = opf.getKnownValuesVector()[i].getCoefficient();
                 // I coefficienti di minoranza sono ai primi posti.
-                sorted[lt] = opf.constraintCoefficients[i];
+                sorted[lt] = opf.getConstraintCoefficients()[i];
                 lt++;
             }
             if (cts[i].equals(Constants.GreaterThan)) {
-                bgt[gt] = opf.knownValuesVector[i].getCoefficient();
+                bgt[gt] = opf.getKnownValuesVector()[i].getCoefficient();
                 // I coefficienti di maggioranza sono dopo quelli di minoranza.
-                sorted[blt.length + gt] = opf.constraintCoefficients[i];
+                sorted[blt.length + gt] = opf.getConstraintCoefficients()[i];
                 gt++;
             }
             if (cts[i].equals(Constants.Equality)) {
-                beq[eq] = opf.knownValuesVector[i].getCoefficient();
+                beq[eq] = opf.getKnownValuesVector()[i].getCoefficient();
                 // I coefficienti di uguaglianza sono agli ultimi posti.
-                sorted[blt.length + bgt.length + eq] = opf.constraintCoefficients[i];
+                sorted[blt.length + bgt.length + eq] = opf.getConstraintCoefficients()[i];
                 eq++;
             }
         }
@@ -132,7 +133,7 @@ public class Exporter {
         for (int i = 0; i < opf.getVariableNumber(); i++) {
             if (i == 0)
                 dat.println("param:\tV:\tc :=");
-            dat.print("\t" + (i + 1) + "\t" + opf.objectiveCoefficientVector[i].getCoefficient());
+            dat.print("\t" + (i + 1) + "\t" + opf.getObjectiveCoefficientVector()[i].getCoefficient());
             dat.println(i == opf.getVariableNumber() - 1 ? " ;" : "");
         }
         // Termini noti

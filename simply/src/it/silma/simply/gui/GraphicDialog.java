@@ -1,5 +1,6 @@
-package it.silma.simply.core;
+package it.silma.simply.gui;
 
+import it.silma.simply.core.Matrix;
 import it.silma.simply.utils.Constants;
 
 import java.awt.BasicStroke;
@@ -29,7 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
 @SuppressWarnings("serial")
-public class GraphicView extends JDialog implements ActionListener {
+public class GraphicDialog extends JDialog implements ActionListener {
 
     private OriginalProblemFrame opf;
     private Painter graph;
@@ -37,9 +38,9 @@ public class GraphicView extends JDialog implements ActionListener {
     private JButton closeButton = new JButton("Chiudi"), zoomIn = new JButton("+"), zoomOut = new JButton("-"),
             refresh = new JButton("Aggiorna");
 
-    public GraphicView(final OriginalProblemFrame opf) {
+    public GraphicDialog(final OriginalProblemFrame opf) {
         super(opf, "Grafico del problema");
-        final GraphicView gv = this;
+        final GraphicDialog gv = this;
         this.setResizable(false);
         this.setLocationByPlatform(true);
         this.opf = opf;
@@ -265,9 +266,9 @@ class Painter extends JComponent {
         g.fill(total);
         // Poi cancella le regioni non ammissibili
         for (int i = 0; i < cts.length; i++) {
-            a = opf.constraintCoefficients[i][0].getCoefficient();
-            b = (opf.constraintCoefficients[i][1].isVisible() ? opf.constraintCoefficients[i][1].getCoefficient() : 0);
-            c = opf.knownValuesVector[i].getCoefficient();
+            a = opf.getConstraintCoefficients()[i][0].getCoefficient();
+            b = (opf.getConstraintCoefficients()[i][1].isVisible() ? opf.getConstraintCoefficients()[i][1].getCoefficient() : 0);
+            c = opf.getKnownValuesVector()[i].getCoefficient();
             x = c / a; // y = 0
             y = c / b; // x = 0
             y *= S;
@@ -282,9 +283,9 @@ class Painter extends JComponent {
         }
         // Infine disegna i vincoli
         for (int i = 0; i < cts.length; i++) {
-            a = opf.constraintCoefficients[i][0].getCoefficient();
-            b = (opf.constraintCoefficients[i][1].isVisible() ? opf.constraintCoefficients[i][1].getCoefficient() : 0);
-            c = opf.knownValuesVector[i].getCoefficient();
+            a = opf.getConstraintCoefficients()[i][0].getCoefficient();
+            b = (opf.getConstraintCoefficients()[i][1].isVisible() ? opf.getConstraintCoefficients()[i][1].getCoefficient() : 0);
+            c = opf.getKnownValuesVector()[i].getCoefficient();
             x = c / a; // y = 0
             y = c / b; // x = 0
             y *= S;
@@ -311,8 +312,8 @@ class Painter extends JComponent {
         g.setColor(Color.red);
         g.setStroke(dashed);
 
-        final double a = opf.objectiveCoefficientVector[0].getCoefficient();
-        final double b = (opf.objectiveCoefficientVector[1].isVisible() ? opf.objectiveCoefficientVector[1]
+        final double a = opf.getObjectiveCoefficientVector()[0].getCoefficient();
+        final double b = (opf.getObjectiveCoefficientVector()[1].isVisible() ? opf.getObjectiveCoefficientVector()[1]
                 .getCoefficient() : 0);
         final double c = p.y * b + .01; // Gia' scalato sul grafico!
 

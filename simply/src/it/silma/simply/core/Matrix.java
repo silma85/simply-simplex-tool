@@ -14,7 +14,7 @@ import java.text.NumberFormat;
  *         uno scalare.
  * 
  */
-class Matrix {
+public class Matrix {
     /**
      * Genera una matrice identita' di ordine n.
      * 
@@ -25,7 +25,7 @@ class Matrix {
      *            La dimensione della matrice.
      * @return
      */
-    protected static Matrix identity(final int n) {
+    public static Matrix identity(final int n) {
         final Matrix id = new Matrix(n, n);
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++)
@@ -153,7 +153,7 @@ class Matrix {
         table[row][col] = val;
     }
 
-    protected double delta() {
+    public double delta() {
         if (this.nc != this.nr || this.nc > 2)
             throw new IllegalArgumentException("Sorry, square 2x2 only.");
         else if (this.nc == 1)
@@ -162,18 +162,18 @@ class Matrix {
             return this.getElement(0, 0) * this.getElement(1, 1) - (this.getElement(0, 1) * this.getElement(1, 0));
     }
 
-    protected void fillWithCoefficients(final Coefficient[][] origin) {
+    public void fillWithCoefficients(final Coefficient[][] origin) {
         fillWithCoefficients(origin, 0, nr, 0, nc);
     }
 
-    protected void fillWithCoefficients(final Coefficient[][] origin, final int sr, final int er, final int sc,
+    public void fillWithCoefficients(final Coefficient[][] origin, final int sr, final int er, final int sc,
             final int ec) {
         for (int i = 0; i < (er - sr); i++)
             for (int j = 0; j < (ec - sc); j++)
                 this.setElement(i, j, origin[i + sr][j + sc].getCoefficient());
     }
 
-    protected Coefficient[][] getCoeffficients(final NumberFormat valueFormat) {
+    public Coefficient[][] getCoeffficients(final NumberFormat valueFormat) {
         // Temporary Coefficient Matrix
         final Coefficient[][] teCoMa = new Coefficient[nr][nc];
         // Riempimento
@@ -191,7 +191,7 @@ class Matrix {
      *            Colonna dell'elemento desiderato.
      * @return L'elemento cercato.
      */
-    protected float getElement(final int row, final int col) {
+    public float getElement(final int row, final int col) {
         return table[row][col];
     }
 

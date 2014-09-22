@@ -3,6 +3,7 @@
  */
 package it.silma.simply.core;
 
+import it.silma.simply.gui.SolverFrame;
 import it.silma.simply.main.Simply;
 import it.silma.simply.utils.Constants;
 
@@ -16,7 +17,7 @@ import javax.swing.BorderFactory;
  * @author Silma
  * 
  */
-class Solver {
+public class Solver {
 
     // Interfaccia del solutore
     protected SolverFrame solverData;
@@ -26,9 +27,9 @@ class Solver {
     /** Numero dei vincoli. */
     int constraintNumber;
     /** Riga e colonna del pivot. */
-    static int pvtRow = -1;
+    private static int pvtRow = -1;
     /** Riga e colonna del pivot. */
-    static int pvtCol = -1;
+    private static int pvtCol = -1;
 
     /*
      * Utilizzo qui la sintassi di [Hillier - Lieberman, RO]: - B - baseMatrix -
@@ -60,7 +61,7 @@ class Solver {
      * Tableau interno: qui vengono fatti i calcoli, le altre
      * <code>Matrix</code> sono solo per comodita'
      */
-    protected Matrix tableau;
+    private Matrix tableau;
 
     /** Tipo del problema */
     Constants problemType;
@@ -84,9 +85,9 @@ class Solver {
         constraintNumber = cNumber;
         solverData = origin;
         // Numero di variabili slack, surplus, artificiali
-        slackNumber = solverData.sourceProblem.getSlackNumber();
-        surplusNumber = solverData.sourceProblem.getSurplusNumber();
-        artificialNumber = solverData.sourceProblem.getArtificialNumber();
+        slackNumber = solverData.getSourceProblem().getSlackNumber();
+        surplusNumber = solverData.getSourceProblem().getSurplusNumber();
+        artificialNumber = solverData.getSourceProblem().getArtificialNumber();
         // Il numero di variabili (della BFS) e' sempre pari al numero di
         // variabili slack piu' il
         // numero di variabili artificiali. Se non e' un problema artificiale,
@@ -95,8 +96,8 @@ class Solver {
         bfs = new float[vNumber + slackNumber + surplusNumber + artificialNumber];
 
         // Inizializzazione del tipo di problema e dei vincoli
-        problemType = solverData.sourceProblem.getProblemType();
-        constraintTypes = solverData.sourceProblem.getConstraintTypes();
+        problemType = solverData.getSourceProblem().getProblemType();
+        constraintTypes = solverData.getSourceProblem().getConstraintTypes();
         // Inizializzazione del tableau interno e del passo
         doInitialTableau();
         // Imposto il primo passo. Se il problema e' semplice, e' subito il
@@ -114,15 +115,15 @@ class Solver {
         // Se il problema e' risolvibile normalmente:
         if (Constants.STATUS.equals(Constants.Simple)) {
             // Tableau interno: il primo, deriva dalla schermata iniziale
-            tableau = solverData.sourceProblem.getInitialTableau();
+            setTableau(solverData.getSourceProblem().getInitialTableau());
             // Valori iniziali del vettore di costo ridotto e delle variabili
             // slack
             for (int i = 0; i < variablesNumber; i++) {
                 float reducedCost = 0;
-                if (solverData.sourceProblem.getProblemType().equals(Constants.Maximize))
-                    reducedCost = -solverData.sourceProblem.objectiveCoefficientVector[i].getCoefficient();
+                if (solverData.getSourceProblem().getProblemType().equals(Constants.Maximize))
+                    reducedCost = -solverData.getSourceProblem().getObjectiveCoefficientVector()[i].getCoefficient();
                 else
-                    reducedCost = solverData.sourceProblem.objectiveCoefficientVector[i].getCoefficient();
+                    reducedCost = solverData.getSourceProblem().getObjectiveCoefficientVector()[i].getCoefficient();
                 variables[i] = new Variable(i, reducedCost, false, false);
             }
             for (int i = variablesNumber; i < variablesNumber + constraintNumber; i++) {
@@ -133,19 +134,19 @@ class Solver {
             bfs = getBFS();
         } else if (Constants.STATUS.equals(Constants.ArtificialPhaseOne)) {
             // Tableau interno: artificiale e appositamente creato
-            tableau = solverData.sourceProblem.getArtificialTableau();
+            setTableau(solverData.getSourceProblem().getArtificialTableau());
             // Valori iniziali del vettore di costo ridotto e delle variabili
             // slack
             for (int i = 0; i < variablesNumber; i++) {
                 float reducedCost = 0;
-                if (solverData.sourceProblem.getProblemType().equals(Constants.Maximize))
-                    reducedCost = -solverData.sourceProblem.objectiveCoefficientVector[i].getCoefficient();
+                if (solverData.getSourceProblem().getProblemType().equals(Constants.Maximize))
+                    reducedCost = -solverData.getSourceProblem().getObjectiveCoefficientVector()[i].getCoefficient();
                 else
-                    reducedCost = solverData.sourceProblem.objectiveCoefficientVector[i].getCoefficient();
+                    reducedCost = solverData.getSourceProblem().getObjectiveCoefficientVector()[i].getCoefficient();
                 variables[i] = new Variable(i, reducedCost, false, false);
             }
             // Valori iniziali di slack, surplus, artificiali
-            final Constants[] cts = solverData.sourceProblem.getConstraintTypes();
+            final Constants[] cts = solverData.getSourceProblem().getConstraintTypes();
             int y = 0, z = 0, b = 0; // Tengono traccia del numero di variabili
             // slack
             // o surplus, artificiali e in base
@@ -192,12 +193,12 @@ class Solver {
         return null; // Non dovrei mai arrivare qui.
     }
 
-    protected float[] getBFS() {
+    public float[] getBFS() {
         for (int i = 0; i < bfs.length; i++) {
             // Se la variabile in esame e' di base, ha valore pari al valore
             // nella colonna
             // dei termini noti del tableau, altrimenti e' pari a 0
-            bfs[i] = getVariable(i).isBasic ? tableau.getElement(getVariable(i).rowId + 1, tableau.getNc() - 1) : 0;
+            bfs[i] = getVariable(i).isBasic ? getTableau().getElement(getVariable(i).rowId + 1, getTableau().getNc() - 1) : 0;
             System.out.print(bfs[i] + "\t"); // Per debug
         }
         System.out.println();
@@ -207,7 +208,7 @@ class Solver {
         return bfs;
     }
 
-    protected void getCoefficientBFS(final Coefficient[] extBFS) {
+    public void getCoefficientBFS(final Coefficient[] extBFS) {
         for (int i = 0; i < extBFS.length; i++)
             extBFS[i].setValue(bfs[i]);
     }
@@ -215,21 +216,21 @@ class Solver {
     /**
      * Crea un tableau esterno dal tableau interno
      */
-    protected void getCoefficientTableau(final Coefficient[][] oldTableau) {
+    public void getCoefficientTableau(final Coefficient[][] oldTableau) {
         final int nr = constraintNumber + 1, nc = oldTableau[1].length;
         // Recupera i coefficienti
         for (int i = 0; i < nr; i++)
             for (int j = 0; j < nc; j++)
-                if (Math.abs(tableau.getElement(i, j)) < 0.00001) {
+                if (Math.abs(getTableau().getElement(i, j)) < 0.00001) {
                     oldTableau[i][j].setValue(0);
-                    tableau.setElement(i, j, 0);
+                    getTableau().setElement(i, j, 0);
                 } else
-                    oldTableau[i][j].setValue(tableau.getElement(i, j));
+                    oldTableau[i][j].setValue(getTableau().getElement(i, j));
     }
 
     /** Esegue il test di ammissibilita' alla fine della Fase Uno. */
-    protected boolean isFeasible() {
-        if (tableau.getElement(0, solverData.extTableau[0].length - 1) != 0)
+    public boolean isFeasible() {
+        if (getTableau().getElement(0, solverData.getExtTableau()[0].length - 1) != 0)
             return false;
         return true;
     }
@@ -237,23 +238,23 @@ class Solver {
     /**
      * Confronta i tableaux interno ed esterno e la BFS.
      */
-    protected boolean isTableauCorrect() {
+    public boolean isTableauCorrect() {
         boolean flag = true;
         // Se la BFS e' diversa, l'utente ha sbagliato a inserire i dati.
         for (int i = 0; i < bfs.length; i++)
             // Arrotondo eventuali errori di approssimazione.
-            if (Math.abs(bfs[i] - solverData.extBFS[i].getCoefficient()) >= 0.01f) {
-                solverData.extBFS[i].setBorder(BorderFactory.createEtchedBorder(Color.RED, Color.GRAY));
+            if (Math.abs(bfs[i] - solverData.getExtBFS()[i].getCoefficient()) >= 0.01f) {
+                solverData.getExtBFS()[i].setBorder(BorderFactory.createEtchedBorder(Color.RED, Color.GRAY));
                 Simply.lowerMark();
                 flag = false;
             }
         // Se siamo qui, abbiamo superato il test della BFS.
         // Se un elemento e' diverso, le matrici sono diverse
-        for (int i = 0; i < tableau.getNr(); i++)
-            for (int j = 0; j < tableau.getNc(); j++)
+        for (int i = 0; i < getTableau().getNr(); i++)
+            for (int j = 0; j < getTableau().getNc(); j++)
                 // Arrotondo eventuali errori di approssimazione.
-                if (Math.abs(tableau.getElement(i, j) - solverData.extTableau[i][j].getCoefficient()) >= 0.01f) {
-                    solverData.extTableau[i][j].setBorder(BorderFactory.createEtchedBorder(Color.RED, Color.GRAY));
+                if (Math.abs(getTableau().getElement(i, j) - solverData.getExtTableau()[i][j].getCoefficient()) >= 0.01f) {
+                    solverData.getExtTableau()[i][j].setBorder(BorderFactory.createEtchedBorder(Color.RED, Color.GRAY));
                     Simply.lowerMark();
                     flag = false;
                 }
@@ -267,9 +268,9 @@ class Solver {
      * @return <code>true</code> se il test di ottimalita' ha successo,
      *         <code>false</code> altrimenti.
      */
-    protected boolean isTableauOptimum() {
+    public boolean isTableauOptimum() {
         for (int i = 0; i < variablesNumber + slackNumber + surplusNumber + artificialNumber; i++)
-            if (tableau.getElement(0, i) < 0)
+            if (getTableau().getElement(0, i) < 0)
                 return false;
         return true;
     }
@@ -277,9 +278,9 @@ class Solver {
     /**
      * Esegue il test di illimitatezza dopo aver trovato una variabile entrante.
      */
-    protected boolean isUnbounded() {
+    public boolean isUnbounded() {
         for (int i = 0; i < constraintNumber; i++)
-            if (tableau.getElement(i + 1, pvtCol) > 0)
+            if (getTableau().getElement(i + 1, getPvtCol()) > 0)
                 return false;
         return true;
     }
@@ -290,13 +291,13 @@ class Solver {
      * tableau, perche' solo qui possono verificarsi discrepanze al di fuori
      * delle operazioni di pivot.
      */
-    protected void normalizeTableau() {
+    public void normalizeTableau() {
         for (int i = 0; i < variables.length; i++)
             if (variables[i].isBasic)
-                tableau.addTimesLineToLine(-tableau.getElement(0, i), variables[i].rowId + 1, 0);
+                getTableau().addTimesLineToLine(-getTableau().getElement(0, i), variables[i].rowId + 1, 0);
         // Imposto i nuovi valori delle variabili
         for (int i = 0; i < variablesNumber + slackNumber + surplusNumber + artificialNumber; i++)
-            getVariable(i).setCoefficient(tableau.getElement(0, i));
+            getVariable(i).setCoefficient(getTableau().getElement(0, i));
     }
 
     /**
@@ -305,9 +306,9 @@ class Solver {
      * 
      * @param pvt
      */
-    protected void pivotAround() {
-        final Variable entering = this.getVariable(Solver.pvtCol);
-        final Variable exiting = this.getVariableByRow(Solver.pvtRow);
+    public void pivotAround() {
+        final Variable entering = this.getVariable(Solver.getPvtCol());
+        final Variable exiting = this.getVariableByRow(Solver.getPvtRow());
         // System.out.println(Solver.pvtRow + " " + Solver.pvtCol);
         // System.out.println("In entrata " + entering.getCoefficient());
         // System.out.println("In uscita " + exiting.getCoefficient());
@@ -317,17 +318,17 @@ class Solver {
             System.exit(255);
         // Per prima cosa, divido la riga della variabile
         // uscente per il valore pivot
-        tableau.divideLineByScalar(tableau.getElement(Solver.pvtRow, Solver.pvtCol), Solver.pvtRow);
+        getTableau().divideLineByScalar(getTableau().getElement(Solver.getPvtRow(), Solver.getPvtCol()), Solver.getPvtRow());
         // Dopodiche', aggiorno le altre righe per avere 0
         // nella colonna della variabile entrante
         for (int i = 0; i < constraintNumber + 1; i++)
-            if (i != Solver.pvtRow)
+            if (i != Solver.getPvtRow())
                 // Aggiungi (o sottrai, somma algebrica comunque) la riga
                 // pivot alle altre righe, moltiplicata per l'inverso della
                 // quantita' nella colonna pivot: in questo modo, tutte le altre
                 // righe (diverse cioe' dalla riga pivot) hanno valori nella
                 // colonna pivot pari a 0
-                tableau.addTimesLineToLine(-tableau.getElement(i, Solver.pvtCol), Solver.pvtRow, i);
+                getTableau().addTimesLineToLine(-getTableau().getElement(i, Solver.getPvtCol()), Solver.getPvtRow(), i);
         // Scambio lo stato delle variabili e aggiorno i coefficienti.
         entering.toggleBasic();
         exiting.toggleBasic();
@@ -336,12 +337,12 @@ class Solver {
         exiting.rowId = -1;
         // Imposto i nuovi valori delle variabili
         for (int i = 0; i < variables.length; i++)
-            getVariable(i).setCoefficient(tableau.getElement(0, i));
+            getVariable(i).setCoefficient(getTableau().getElement(0, i));
         // Aggiorno la BFS attuale.
         bfs = getBFS();
     }
 
-    protected void setEntering() {
+    public void setEntering() {
         float minimum = 0f;
         // Confronto i coefficienti con un minimo posto inizialmente a 0,
         // per avere confronti solo su valori negativi. Se una variabile
@@ -353,11 +354,11 @@ class Solver {
             // Approssimato alla seconda cifra decimale
                     && (variables[i].getCoefficient() - minimum) < -0.01) {
                 minimum = variables[i].getCoefficient();
-                Solver.pvtCol = i;
+                Solver.setPvtCol(i);
             }
     }
 
-    protected void setExiting() {
+    public void setExiting() {
         // System.out.println();
         float minRatio = Float.POSITIVE_INFINITY, ratio;
         final int lastCol = variablesNumber + slackNumber + surplusNumber + artificialNumber;
@@ -365,14 +366,14 @@ class Solver {
         // colonna pivot, solo se entrambi sono maggiori di 0.
         // Il minor risultato della divisione e' scelto.
         for (int i = 0; i < constraintNumber; i++)
-            if (tableau.getElement(i + 1, Solver.pvtCol) > 0 && tableau.getElement(i + 1, lastCol) >= 0) {
-                ratio = tableau.getElement(i + 1, lastCol) / tableau.getElement(i + 1, Solver.pvtCol);
+            if (getTableau().getElement(i + 1, Solver.getPvtCol()) > 0 && getTableau().getElement(i + 1, lastCol) >= 0) {
+                ratio = getTableau().getElement(i + 1, lastCol) / getTableau().getElement(i + 1, Solver.getPvtCol());
                 // System.out.print(ratio + " ");
                 if (ratio < minRatio) {
                     // Se il risultato e' minore di qualche precedente, diventa
                     // il nuovo minimo.
                     minRatio = ratio;
-                    Solver.pvtRow = i + 1;
+                    Solver.setPvtRow(i + 1);
                 }
             }
         // System.out.println();
@@ -381,27 +382,27 @@ class Solver {
     /**
      * Imposta il tableau interno per l'inizio della fase artificiale 2.
      */
-    protected void setInternalPhaseTwoTableau() {
-        Matrix newTableau = new Matrix(tableau.getNr(), tableau.getNc() - artificialNumber);
+    public void setInternalPhaseTwoTableau() {
+        Matrix newTableau = new Matrix(getTableau().getNr(), getTableau().getNc() - artificialNumber);
         float[] newBfs = new float[variablesNumber + slackNumber + surplusNumber];
         Variable[] newVars = new Variable[variablesNumber + slackNumber + surplusNumber];
         // Riempio i contenitori
         for (int i = 0; i < newTableau.getNr(); i++) {
             for (int j = 0; j < newTableau.getNc(); j++) {
-                newTableau.setElement(i, j, tableau.getElement(i, j));
+                newTableau.setElement(i, j, getTableau().getElement(i, j));
                 // E' il momento di includere i coefficienti della funzione
                 // obiettivo.
                 if (i == 0 && j < variablesNumber)
                     newTableau.setElement(i, j,
-                            (solverData.sourceProblem.getProblemType().equals(Constants.Maximize) ? -1 : 1)
-                                    * solverData.sourceProblem.objectiveCoefficientVector[j].getCoefficient());
+                            (solverData.getSourceProblem().getProblemType().equals(Constants.Maximize) ? -1 : 1)
+                                    * solverData.getSourceProblem().getObjectiveCoefficientVector()[j].getCoefficient());
             }
             // Il ciclo for precedente non considera che l'ultima colonna e'
             // rilevante. Correggo.
             newTableau
-                    .setElement(i, tableau.getNc() - artificialNumber - 1, tableau.getElement(i, tableau.getNc() - 1));
+                    .setElement(i, getTableau().getNc() - artificialNumber - 1, getTableau().getElement(i, getTableau().getNc() - 1));
         }
-        tableau = newTableau;
+        setTableau(newTableau);
         for (int i = 0; i < newVars.length; i++)
             // Dovrebbe andare bene cosi' com'e'.
             newVars[i] = variables[i];
@@ -415,4 +416,28 @@ class Solver {
         newVars = null;
         newBfs = null;
     }
+
+	public static int getPvtCol() {
+		return pvtCol;
+	}
+
+	public static void setPvtCol(int pvtCol) {
+		Solver.pvtCol = pvtCol;
+	}
+
+	public static int getPvtRow() {
+		return pvtRow;
+	}
+
+	public static void setPvtRow(int pvtRow) {
+		Solver.pvtRow = pvtRow;
+	}
+
+	public Matrix getTableau() {
+		return tableau;
+	}
+
+	public void setTableau(Matrix tableau) {
+		this.tableau = tableau;
+	}
 }

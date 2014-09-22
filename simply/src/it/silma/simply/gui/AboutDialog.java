@@ -1,4 +1,4 @@
-package it.silma.simply.core;
+package it.silma.simply.gui;
 
 import it.silma.simply.utils.Messages;
 
@@ -21,9 +21,9 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
 @SuppressWarnings("serial")
-public class AboutBox extends JDialog {
+public class AboutDialog extends JDialog {
 
-    public AboutBox(final Frame parent, final String title) {
+    public AboutDialog(final Frame parent, final String title) {
         super(parent, title);
 
         final JPanel contentPane = new JPanel(new BorderLayout());
@@ -42,7 +42,7 @@ public class AboutBox extends JDialog {
         text.setBackground(null);
 
         final JButton closeButton = new JButton("Chiudi");
-        final AboutBox about = this;
+        final AboutDialog about = this;
         closeButton.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
                 about.setVisible(false);

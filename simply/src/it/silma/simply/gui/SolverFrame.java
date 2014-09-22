@@ -1,8 +1,10 @@
 /**
  * 
  */
-package it.silma.simply.core;
+package it.silma.simply.gui;
 
+import it.silma.simply.core.Coefficient;
+import it.silma.simply.core.Solver;
 import it.silma.simply.main.Simply;
 import it.silma.simply.utils.Constants;
 import it.silma.simply.utils.Messages;
@@ -42,7 +44,7 @@ import javax.swing.border.Border;
 @SuppressWarnings("serial")
 public class SolverFrame extends JFrame implements ActionListener {
     /** Frame contentente il problema e tutti i dati iniziali. */
-    protected OriginalProblemFrame sourceProblem;
+    private OriginalProblemFrame sourceProblem;
     /** Solutore per l'attuale problema. */
     protected Solver solver;
 
@@ -69,10 +71,10 @@ public class SolverFrame extends JFrame implements ActionListener {
     // Il tableau "visualizzabile" e' uno solo; conosco
     // i valori delle partizioni abbastanza per poterlo dividere
     // al momento in cui ce ne sia bisogno.
-    protected Coefficient[][] extTableau;
+    private Coefficient[][] extTableau;
     JLabel[] topRowLabel;
     // Anche la BFS e' resa interattiva e confrontabile
-    protected Coefficient[] extBFS;
+    private Coefficient[] extBFS;
     private int tableauRows;
     private int tableauCols;
     final int constraintNumber;
@@ -86,7 +88,7 @@ public class SolverFrame extends JFrame implements ActionListener {
         this.setLayout(new BorderLayout());
         this.getContentPane().setBackground(new Color(245, 245, 255));
 
-        this.sourceProblem = sourceProblem;
+        this.setSourceProblem(sourceProblem);
         this.constraintNumber = sourceProblem.getConstraintNumber();
         this.variableNumber = sourceProblem.getVariableNumber();
 
@@ -228,8 +230,8 @@ public class SolverFrame extends JFrame implements ActionListener {
 
     private void doSolutionRequest() {
         solution = true;
-        solver.getCoefficientTableau(extTableau);
-        solver.getCoefficientBFS(extBFS);
+        solver.getCoefficientTableau(getExtTableau());
+        solver.getCoefficientBFS(getExtBFS());
         this.setRequestText(Messages.TABLEAU_GIVEUP);
         // Pessimo voto.
         Simply.setMark(0);
@@ -296,7 +298,7 @@ public class SolverFrame extends JFrame implements ActionListener {
         topPanel.add(requestsScrollArea);
 
         // Barra di stato iniziale (problema di massimo o minimo)
-        statusArea = new JLabel(Constants.STATUS.equals(Constants.Simple) ? (sourceProblem.getProblemType().equals(
+        statusArea = new JLabel(Constants.STATUS.equals(Constants.Simple) ? (getSourceProblem().getProblemType().equals(
                 Constants.Maximize) ? Messages.STATUS_MAXIMIZE : Messages.STATUS_MINIMIZE) : Messages.STATUS_PHASE_ONE);
         statusArea.setAlignmentX(LEFT_ALIGNMENT);
         statusArea.setBorder(BorderFactory.createEmptyBorder(12, 0, 0, 0));
@@ -332,11 +334,11 @@ public class SolverFrame extends JFrame implements ActionListener {
      * 
      */
     private void initCenterAndBfsPanel() {
-        tableauCols = variableNumber + sourceProblem.getSlackNumber() + sourceProblem.getSurplusNumber()
-                + sourceProblem.getArtificialNumber() + 1;
+        tableauCols = variableNumber + getSourceProblem().getSlackNumber() + getSourceProblem().getSurplusNumber()
+                + getSourceProblem().getArtificialNumber() + 1;
         tableauRows = 1 + constraintNumber;
         centerPanel.setLayout(new GridLayout(tableauRows + 1, tableauCols + 1));
-        extTableau = new Coefficient[tableauRows][tableauCols];
+        setExtTableau(new Coefficient[tableauRows][tableauCols]);
         // Etichette del tableau
         topRowLabel = new JLabel[tableauCols];
         // Imposto la gravita' dell'errore.
@@ -349,49 +351,49 @@ public class SolverFrame extends JFrame implements ActionListener {
                     if (j < variableNumber)
                         topRowLabel[j] = new JLabel("<html><font face=\"serif\" size=\"4\"><i>x</i></font>"
                                 + "<font size=\"3\"><sub>" + (1 + j) + "</sub></font<</html>");
-                    else if (j < variableNumber + sourceProblem.getSlackNumber() + sourceProblem.getSurplusNumber())
+                    else if (j < variableNumber + getSourceProblem().getSlackNumber() + getSourceProblem().getSurplusNumber())
                         topRowLabel[j] = new JLabel("<html><font face=\"serif\" size=\"4\"><i>s</i></font>"
                                 + "<font size=\"3\"><sub>" + (1 + j - variableNumber) + "</sub></font<</html>");
-                    else if (j < variableNumber + sourceProblem.getSlackNumber() + sourceProblem.getSurplusNumber()
-                            + sourceProblem.getArtificialNumber())
+                    else if (j < variableNumber + getSourceProblem().getSlackNumber() + getSourceProblem().getSurplusNumber()
+                            + getSourceProblem().getArtificialNumber())
                         topRowLabel[j] = new JLabel(
                                 "<html><font face=\"serif\" size=\"4\"><i>a</i></font>"
                                         + "<font size=\"3\"><sub>"
-                                        + (1 + j - variableNumber - sourceProblem.getSlackNumber() - sourceProblem
+                                        + (1 + j - variableNumber - getSourceProblem().getSlackNumber() - getSourceProblem()
                                                 .getSurplusNumber()) + "</sub></font<</html>");
                     else
                         topRowLabel[j] = new JLabel("<html><font face=\"serif\" size=\"4\"><i>"
-                                + (sourceProblem.getProblemType().equals(Constants.Maximize) ? "" : "-")
+                                + (getSourceProblem().getProblemType().equals(Constants.Maximize) ? "" : "-")
                                 + "Z</i></font></html>");
                     centerPanel.add(topRowLabel[j]);
                 }
             for (int j = 0; j < tableauCols; j++) {
-                extTableau[i][j] = new Coefficient(0, Constants.valueFormat, i, j);
+                getExtTableau()[i][j] = new Coefficient(0, Constants.valueFormat, i, j);
                 // Registra un listener per i clic per la prima riga.
                 if (i == 0 && j < tableauCols - 1)
-                    extTableau[i][j].addMouseListener(new MouseAdapter() {
+                    getExtTableau()[i][j].addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(final MouseEvent me) {
-                            if (Solver.pvtCol != -1 && Constants.STEP.equals(Constants.EnteringSelect)) {
+                            if (Solver.getPvtCol() != -1 && Constants.STEP.equals(Constants.EnteringSelect)) {
                                 // Le prossime sette righe controllano
                                 // l'evidenziazione di una sola colonna alla
                                 // volta.
                                 for (int i = 0; i < tableauCols - 1; i++) {
                                     final Color color = i < variableNumber ? Color.YELLOW
-                                            : (i >= variableNumber + sourceProblem.getSlackNumber()
-                                                    + sourceProblem.getSurplusNumber() ? Color.PINK : Color.WHITE);
-                                    extTableau[0][i].setBackground(color);
+                                            : (i >= variableNumber + getSourceProblem().getSlackNumber()
+                                                    + getSourceProblem().getSurplusNumber() ? Color.PINK : Color.WHITE);
+                                    getExtTableau()[0][i].setBackground(color);
                                 }
                                 for (int i = 0; i < tableauCols - 1; i++)
                                     for (int j = 1; j < tableauRows; j++)
-                                        extTableau[j][i].setBackground(Color.WHITE);
+                                        getExtTableau()[j][i].setBackground(Color.WHITE);
                                 for (int i = 0; i < tableauRows; i++)
-                                    extTableau[i][((Coefficient) me.getSource()).col].setBackground(new Color(180, 220,
+                                    getExtTableau()[i][((Coefficient) me.getSource()).getCol()].setBackground(new Color(180, 220,
                                             180));
                                 // Le righe seguenti controllano la
                                 // correttezza
                                 // della scelta.
-                                if (((Coefficient) me.getSource()).col == Solver.pvtCol) {
+                                if (((Coefficient) me.getSource()).getCol() == Solver.getPvtCol()) {
                                     setRequestText(Messages.TABLEAU_ENTERING_GOOD);
                                     // Attivo il bottone per la fase
                                     // successiva.
@@ -412,24 +414,24 @@ public class SolverFrame extends JFrame implements ActionListener {
                     });
                 // Registra un listener per i clic per la prima colonna.
                 if (i > 0 && j == 0)
-                    extTableau[i][j].addMouseListener(new MouseAdapter() {
+                    getExtTableau()[i][j].addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(final MouseEvent me) {
-                            if (Solver.pvtRow != -1 && Constants.STEP.equals(Constants.ExitingSelect)) {
+                            if (Solver.getPvtRow() != -1 && Constants.STEP.equals(Constants.ExitingSelect)) {
                                 // Le prossime cinque righe controllano
                                 // l'evidenziazione di una sola riga alla
                                 // volta.
                                 for (int i = 1; i < tableauRows; i++)
                                     for (int j = 0; j < tableauCols - 1; j++)
-                                        if (j != Solver.pvtCol)
-                                            extTableau[i][j].setBackground(Color.WHITE);
+                                        if (j != Solver.getPvtCol())
+                                            getExtTableau()[i][j].setBackground(Color.WHITE);
                                 for (int i = 0; i < tableauCols - 1; i++)
-                                    extTableau[((Coefficient) me.getSource()).row][i].setBackground(new Color(180, 220,
+                                    getExtTableau()[((Coefficient) me.getSource()).getRow()][i].setBackground(new Color(180, 220,
                                             180));
                                 // Le righe seguenti controllano la
                                 // correttezza
                                 // della scelta.
-                                if (((Coefficient) me.getSource()).row == Solver.pvtRow) {
+                                if (((Coefficient) me.getSource()).getRow() == Solver.getPvtRow()) {
                                     setRequestText(Messages.TABLEAU_EXITING_GOOD);
                                     // Attivo il bottone per la fase
                                     // successiva.
@@ -447,32 +449,32 @@ public class SolverFrame extends JFrame implements ActionListener {
                     });
                 // Giallo per i coeff. di costo ridotto
                 if (i == 0 && j < variableNumber)
-                    extTableau[i][j].setBackground(Color.YELLOW);
+                    getExtTableau()[i][j].setBackground(Color.YELLOW);
                 // Ciano per i termini noti
                 if (i != 0 && j == tableauCols - 1)
-                    extTableau[i][j].setBackground(Color.CYAN);
+                    getExtTableau()[i][j].setBackground(Color.CYAN);
                 // Se presente, rosa per le variabili artificiali
                 if (Constants.STATUS.equals(Constants.ArtificialPhaseOne))
                     if (i == 0
-                            && j >= variableNumber + sourceProblem.getSlackNumber() + sourceProblem.getSurplusNumber())
-                        extTableau[i][j].setBackground(Color.PINK);
+                            && j >= variableNumber + getSourceProblem().getSlackNumber() + getSourceProblem().getSurplusNumber())
+                        getExtTableau()[i][j].setBackground(Color.PINK);
                 // Violetto per il valore obiettivo
                 if (i == 0 && j == tableauCols - 1)
-                    extTableau[i][j].setBackground(new Color(200, 140, 200));
+                    getExtTableau()[i][j].setBackground(new Color(200, 140, 200));
 
-                centerPanel.add(extTableau[i][j]);
+                centerPanel.add(getExtTableau()[i][j]);
             }
         }
 
         // Pannello della BFS, aggiunge variabili nel numero adeguato
         bfsPanel.setAlignmentX(BOTTOM_ALIGNMENT);
-        extBFS = new Coefficient[tableauCols - 1];
+        setExtBFS(new Coefficient[tableauCols - 1]);
         for (int i = 0; i < tableauCols - 1; i++)
             bfsPanel.add(new JLabel(topRowLabel[i].getText()));
         for (int i = 0; i < tableauCols - 1; i++) {
-            extBFS[i] = new Coefficient(0, Constants.valueFormat, 0, i);
-            extBFS[i].setBackground(new Color(180, 220, 180));
-            bfsPanel.add(extBFS[i]);
+            getExtBFS()[i] = new Coefficient(0, Constants.valueFormat, 0, i);
+            getExtBFS()[i].setBackground(new Color(180, 220, 180));
+            bfsPanel.add(getExtBFS()[i]);
         }
     }
 
@@ -582,7 +584,7 @@ public class SolverFrame extends JFrame implements ActionListener {
         helpMenu.addSeparator();
         // Aiuto->Informazioni su
         final JMenuItem aboutHelpMenu = new JMenuItem("Informazioni su Simply");
-        final AboutBox about = new AboutBox(this, "Informazioni su Simply");
+        final AboutDialog about = new AboutDialog(this, "Informazioni su Simply");
         aboutHelpMenu.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
                 about.setVisible(true);
@@ -630,7 +632,7 @@ public class SolverFrame extends JFrame implements ActionListener {
         } else if (Constants.STEP.equals(Constants.PivotOperations)) {
             // Il passo successivo sono le operazioni di pivot.
             this.setRequestText(Messages.TABLEAU_PIVOT_FIRST
-                    + Constants.valueFormat.format(solver.tableau.getElement(Solver.pvtRow, Solver.pvtCol))
+                    + Constants.valueFormat.format(solver.getTableau().getElement(Solver.getPvtRow(), Solver.getPvtCol()))
                     + Messages.TABLEAU_PIVOT_SECOND);
             Constants.STEP = Constants.PivotOperations;
             // Internamente, effettuo le operazioni di pivot.
@@ -650,14 +652,14 @@ public class SolverFrame extends JFrame implements ActionListener {
         // Rimuove le variabili artificiali dal tableau esterno e dalla BFS
         // esterna.
         final Coefficient[][] newTableau = new Coefficient[tableauRows][tableauCols
-                - sourceProblem.getArtificialNumber()];
+                - getSourceProblem().getArtificialNumber()];
         // Le colonne nel tableau sono una in piu' delle variabili nella
         // BFS!
-        final Coefficient[] newBFS = new Coefficient[tableauCols - sourceProblem.getArtificialNumber() - 1];
-        topRowLabel[tableauCols - sourceProblem.getArtificialNumber() - 1] = topRowLabel[tableauCols - 1];
+        final Coefficient[] newBFS = new Coefficient[tableauCols - getSourceProblem().getArtificialNumber() - 1];
+        topRowLabel[tableauCols - getSourceProblem().getArtificialNumber() - 1] = topRowLabel[tableauCols - 1];
         for (int i = 0; i < tableauRows; i++) {
-            for (int j = 0; j < tableauCols - sourceProblem.getArtificialNumber(); j++) {
-                newTableau[i][j] = extTableau[i][j];
+            for (int j = 0; j < tableauCols - getSourceProblem().getArtificialNumber(); j++) {
+                newTableau[i][j] = getExtTableau()[i][j];
                 if (i == 0 && j < variableNumber)
                     newTableau[i][j].setBackground(Color.YELLOW);
                 else
@@ -666,16 +668,16 @@ public class SolverFrame extends JFrame implements ActionListener {
             // Il ciclo for precedente ignora il fatto che l'ultima colonna
             // sia
             // rilevante. Correggo.
-            newTableau[i][tableauCols - sourceProblem.getArtificialNumber() - 1] = extTableau[i][tableauCols - 1];
+            newTableau[i][tableauCols - getSourceProblem().getArtificialNumber() - 1] = getExtTableau()[i][tableauCols - 1];
             if (i > 0)
-                newTableau[i][tableauCols - sourceProblem.getArtificialNumber() - 1].setBackground(Color.CYAN);
+                newTableau[i][tableauCols - getSourceProblem().getArtificialNumber() - 1].setBackground(Color.CYAN);
         }
         for (int i = 0; i < newBFS.length; i++)
             // Dovrebbe andare bene cosi' com'e'
-            newBFS[i] = extBFS[i];
-        tableauCols -= sourceProblem.getArtificialNumber();
-        extTableau = newTableau;
-        extBFS = newBFS;
+            newBFS[i] = getExtBFS()[i];
+        tableauCols -= getSourceProblem().getArtificialNumber();
+        setExtTableau(newTableau);
+        setExtBFS(newBFS);
         // Imposto il nuovo rateo di errore
         Simply.setErrorRatio(tableauRows * tableauCols);
         // Sistemo la grafica
@@ -686,14 +688,14 @@ public class SolverFrame extends JFrame implements ActionListener {
                 for (int j = 0; j < tableauCols; j++)
                     centerPanel.add(topRowLabel[j]);
             for (int j = 0; j < tableauCols; j++)
-                centerPanel.add(extTableau[i][j]);
+                centerPanel.add(getExtTableau()[i][j]);
         }
         bfsPanel.removeAll();
         bfsPanel.setLayout(new GridLayout(2, 0));
         for (int j = 0; j < tableauCols - 1; j++)
             bfsPanel.add(new JLabel(topRowLabel[j].getText()));
         for (int j = 0; j < tableauCols - 1; j++)
-            bfsPanel.add(extBFS[j]);
+            bfsPanel.add(getExtBFS()[j]);
         // Ridisegna.
         this.repaint();
         this.pack();
@@ -749,7 +751,7 @@ public class SolverFrame extends JFrame implements ActionListener {
                 setRequestText(Messages.TABLEAU_SOLVED + Constants.valueFormat.format(Simply.getGrade()) + "</b>."
                         + Messages.HTML_END);
                 setStatusText(Messages.STATUS_FINISHED);
-                extTableau[0][tableauCols - 1].setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+                getExtTableau()[0][tableauCols - 1].setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
                 // Il momento del voto.
                 doShowGrade();
             } else // Siamo nel passaggio dalla fase 1 alla fase 2.
@@ -773,8 +775,8 @@ public class SolverFrame extends JFrame implements ActionListener {
                 setPhaseTwoCenterAndBfsPanel();
                 // Riattiva il pulsante di convalida.
                 validateButton.setEnabled(true);
-                Solver.pvtRow = -1;
-                Solver.pvtCol = -1;
+                Solver.setPvtRow(-1);
+                Solver.setPvtCol(-1);
             }
         } else {
             // Altrimenti, prepara la prossima fase.
@@ -782,8 +784,8 @@ public class SolverFrame extends JFrame implements ActionListener {
             setRequestText(Messages.TABLEAU_SELECT_ENTERING);
             setStatusText(Messages.STATUS_WAITING);
             validateButton.setEnabled(false);
-            Solver.pvtRow = -1;
-            Solver.pvtCol = -1;
+            Solver.setPvtRow(-1);
+            Solver.setPvtCol(-1);
             // Internamente, il solutore sceglie la variabile entrante.
             solver.setEntering();
         }
@@ -796,4 +798,28 @@ public class SolverFrame extends JFrame implements ActionListener {
     protected void setStatusText(final String text) {
         statusArea.setText(Messages.HTML + text + Messages.HTML_END);
     }
+
+	public OriginalProblemFrame getSourceProblem() {
+		return sourceProblem;
+	}
+
+	public void setSourceProblem(OriginalProblemFrame sourceProblem) {
+		this.sourceProblem = sourceProblem;
+	}
+
+	public Coefficient[] getExtBFS() {
+		return extBFS;
+	}
+
+	public void setExtBFS(Coefficient[] extBFS) {
+		this.extBFS = extBFS;
+	}
+
+	public Coefficient[][] getExtTableau() {
+		return extTableau;
+	}
+
+	public void setExtTableau(Coefficient[][] extTableau) {
+		this.extTableau = extTableau;
+	}
 }

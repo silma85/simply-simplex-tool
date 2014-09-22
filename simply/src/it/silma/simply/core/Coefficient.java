@@ -22,11 +22,12 @@ import javax.swing.event.DocumentListener;
  * formato, dimensioni e bordo nullo.
  */
 @SuppressWarnings("serial")
-class Coefficient extends JFormattedTextField implements DocumentListener {
+public class Coefficient extends JFormattedTextField implements DocumentListener {
     private final Border normalBorder = BorderFactory.createEtchedBorder();
     private final Border errorBorder = BorderFactory.createLineBorder(Color.RED, 1);
     // I coefficienti sanno in quale riga e colonna si trovano.
-    protected int row, col;
+    private int row;
+	private int col;
 
     /** Crea un Coefficient vuoto. */
     public Coefficient() {
@@ -47,8 +48,8 @@ class Coefficient extends JFormattedTextField implements DocumentListener {
         this.setValue(new Float(value));
         this.setColumns(4);
         this.setBorder(normalBorder);
-        this.row = row;
-        this.col = col;
+        this.setRow(row);
+        this.setCol(col);
 
         this.setDisabledTextColor(Color.WHITE);
 
@@ -113,7 +114,7 @@ class Coefficient extends JFormattedTextField implements DocumentListener {
     }
 
     /** Espone il valore del Coefficiente come float. */
-    protected float getCoefficient() throws NumberFormatException {
+    public float getCoefficient() throws NumberFormatException {
         return Float.parseFloat(this.getText());
     }
 
@@ -121,5 +122,21 @@ class Coefficient extends JFormattedTextField implements DocumentListener {
     protected void negate() {
         this.setValue(-this.getCoefficient());
     }
+
+	public int getCol() {
+		return col;
+	}
+
+	public void setCol(int col) {
+		this.col = col;
+	}
+
+	public int getRow() {
+		return row;
+	}
+
+	public void setRow(int row) {
+		this.row = row;
+	}
 
 }

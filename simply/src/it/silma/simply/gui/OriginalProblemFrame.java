@@ -1,8 +1,11 @@
 /**
  * 
  */
-package it.silma.simply.core;
+package it.silma.simply.gui;
 
+import it.silma.simply.core.Coefficient;
+import it.silma.simply.core.Exporter;
+import it.silma.simply.core.Matrix;
 import it.silma.simply.main.Simply;
 import it.silma.simply.utils.Constants;
 import it.silma.simply.utils.Messages;
@@ -73,9 +76,9 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
             startSimplexButton = new JButton("Risolutore"), graphicButton = new JButton("Grafico");
 
     // Coefficienti della matrice A e del vettore t (cfr. tableau)
-    Coefficient[][] constraintCoefficients = new Coefficient[Constants.MAX_SIZE][Constants.MAX_SIZE];
-    Coefficient[] objectiveCoefficientVector = new Coefficient[Constants.MAX_SIZE],
-            knownValuesVector = new Coefficient[Constants.MAX_SIZE];
+    private Coefficient[][] constraintCoefficients = new Coefficient[Constants.MAX_SIZE][Constants.MAX_SIZE];
+    private Coefficient[] objectiveCoefficientVector = new Coefficient[Constants.MAX_SIZE];
+	private Coefficient[] knownValuesVector = new Coefficient[Constants.MAX_SIZE];
     JLabel objectiveLabel[] = new JLabel[Constants.MAX_SIZE];
 
     /**
@@ -118,10 +121,10 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
         addButtons(buttonPanel);
 
         // Impone le dimensioni in dipendenza dal contenuto.
-        canonFormPanel.setPreferredSize(new Dimension(objectiveCoefficientVector[0].getPreferredSize().width
+        canonFormPanel.setPreferredSize(new Dimension(getObjectiveCoefficientVector()[0].getPreferredSize().width
                 * (Constants.MAX_SIZE + 2) + 30, 180));
-        coefficientsPanel.setPreferredSize(new Dimension(objectiveCoefficientVector[0].getPreferredSize().width
-                * (Constants.MAX_SIZE + 2) + 30, objectiveCoefficientVector[0].getPreferredSize().height
+        coefficientsPanel.setPreferredSize(new Dimension(getObjectiveCoefficientVector()[0].getPreferredSize().width
+                * (Constants.MAX_SIZE + 2) + 30, getObjectiveCoefficientVector()[0].getPreferredSize().height
                 * (Constants.MAX_SIZE + 3) + 36));
 
         // Bordi
@@ -186,12 +189,12 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
         // Se viene premuto il bottone di reset
         if (e.getActionCommand().equals(resetButton.getActionCommand()))
             for (int i = 0; i < getConstraintNumber(); i++) {
-                knownValuesVector[i].setValue(new Float(0));
+                getKnownValuesVector()[i].setValue(new Float(0));
                 constraintTypeSpinner[i].setValue("\u2264");
                 for (int j = 0; j < getVariableNumber(); j++) {
                     if (i == 0)
-                        objectiveCoefficientVector[j].setValue(new Float(1));
-                    constraintCoefficients[i][j].setValue(new Float(0));
+                        getObjectiveCoefficientVector()[j].setValue(new Float(1));
+                    getConstraintCoefficients()[i][j].setValue(new Float(0));
                 }
             }
 
@@ -203,7 +206,7 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
 
         // Se viene premuto il bottone del grafico
         if (e.getActionCommand().equals("graphic")) {
-            final GraphicView graph = new GraphicView(this);
+            final GraphicDialog graph = new GraphicDialog(this);
             graph.setVisible(true);
         }
     }
@@ -275,7 +278,7 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
             rightConstraint.gridy = 0;
             coefficientsPanel.add(objectiveLabel[i], rightConstraint);
             rightConstraint.gridy = 1;
-            coefficientsPanel.add(objectiveCoefficientVector[i], rightConstraint);
+            coefficientsPanel.add(getObjectiveCoefficientVector()[i], rightConstraint);
         }
         // Con etichetta per la funzione obiettivo
         rightConstraint.gridx = Constants.MAX_SIZE;
@@ -289,7 +292,7 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
             for (int j = 0; j < Constants.MAX_SIZE; j++) {
                 rightConstraint.gridy = j + 2;
                 rightConstraint.gridx = i;
-                coefficientsPanel.add(constraintCoefficients[j][i], rightConstraint);
+                coefficientsPanel.add(getConstraintCoefficients()[j][i], rightConstraint);
             }
         // Aggiunta selettori del tipo dei vincoli e termini noti
         for (int j = 0; j < Constants.MAX_SIZE; j++) {
@@ -303,7 +306,7 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
             rightConstraint.gridwidth = 1;
             rightConstraint.gridx = Constants.MAX_SIZE + 1;
             rightConstraint.gridy = j + 2;
-            coefficientsPanel.add(knownValuesVector[j], rightConstraint);
+            coefficientsPanel.add(getKnownValuesVector()[j], rightConstraint);
         }
     }
 
@@ -398,15 +401,15 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
         // Itera lungo i termini noti. Se uno e' negativo, gira tutta la
         // disequazione.
         for (int i = 0; i < cts.length; i++)
-            if (knownValuesVector[i].getCoefficient() < 0) {
+            if (getKnownValuesVector()[i].getCoefficient() < 0) {
                 flag = true;
-                knownValuesVector[i].setValue(-knownValuesVector[i].getCoefficient());
+                getKnownValuesVector()[i].setValue(-getKnownValuesVector()[i].getCoefficient());
                 if (cts[i].equals(Constants.LessThan))
                     constraintTypeSpinner[i].getModel().setValue("≥");
                 else if (cts[i].equals(Constants.GreaterThan))
                     constraintTypeSpinner[i].getModel().setValue("≤");
-                for (int j = 0; j < constraintCoefficients[i].length; j++)
-                    constraintCoefficients[i][j].setValue(-constraintCoefficients[i][j].getCoefficient());
+                for (int j = 0; j < getConstraintCoefficients()[i].length; j++)
+                    getConstraintCoefficients()[i][j].setValue(-getConstraintCoefficients()[i][j].getCoefficient());
             }
         // Messaggio di avvertimento
         if (flag)
@@ -465,26 +468,26 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
             final JComponent editor = constraintTypeSpinner[i].getEditor();
             ((JSpinner.DefaultEditor) editor).getTextField().setEditable(false);
             // Coefficienti della funzione obiettivo (con etichette)
-            objectiveCoefficientVector[i] = new Coefficient(1, Constants.valueFormat);
-            objectiveCoefficientVector[i].setPreferredSize(new Dimension(24, 24));
-            objectiveCoefficientVector[i].setBackground(Color.yellow);
+            getObjectiveCoefficientVector()[i] = new Coefficient(1, Constants.valueFormat);
+            getObjectiveCoefficientVector()[i].setPreferredSize(new Dimension(24, 24));
+            getObjectiveCoefficientVector()[i].setBackground(Color.yellow);
             objectiveLabel[i] = new JLabel("<html><font face=\"serif\" size=\"4\"><i>x</i><font size=\"3\"><sub>"
                     + (i + 1) + "</sub></font></font></html>");
             // Coefficienti dei vari vincoli
             for (int j = 0; j < Constants.MAX_SIZE; j++)
-                constraintCoefficients[i][j] = new Coefficient(0, Constants.valueFormat);
+                getConstraintCoefficients()[i][j] = new Coefficient(0, Constants.valueFormat);
             // Termini noti
-            knownValuesVector[i] = new Coefficient(0, Constants.valueFormat);
-            knownValuesVector[i].setBackground(Color.cyan);
+            getKnownValuesVector()[i] = new Coefficient(0, Constants.valueFormat);
+            getKnownValuesVector()[i].setBackground(Color.cyan);
         }
 
         for (int i = 0; i < Constants.MAX_SIZE; i++) {
             constraintTypeSpinner[i].setVisible(i == 0 || i == 1);
-            objectiveCoefficientVector[i].setVisible(i == 0 || i == 1);
+            getObjectiveCoefficientVector()[i].setVisible(i == 0 || i == 1);
             objectiveLabel[i].setVisible(i == 0 || i == 1);
-            knownValuesVector[i].setVisible(i == 0 || i == 1);
+            getKnownValuesVector()[i].setVisible(i == 0 || i == 1);
             for (int j = 0; j < Constants.MAX_SIZE; j++)
-                constraintCoefficients[i][j].setVisible((i == 0 || i == 1) && (j == 0 || j == 1));
+                getConstraintCoefficients()[i][j].setVisible((i == 0 || i == 1) && (j == 0 || j == 1));
         }
     }
 
@@ -584,7 +587,7 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
 
         // Aiuto->Informazioni su
         final JMenuItem aboutHelpMenu = new JMenuItem("Informazioni su Simply");
-        final AboutBox about = new AboutBox(this, "Informazioni su Simply");
+        final AboutDialog about = new AboutDialog(this, "Informazioni su Simply");
         aboutHelpMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -611,19 +614,19 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
         // Tutte le righe fino all'attuale numero di vincoli
         for (int i = 0; i < Constants.MAX_SIZE; i++) {
             if (i < variableNumber) {
-                objectiveCoefficientVector[i].setVisible(true);
+                getObjectiveCoefficientVector()[i].setVisible(true);
                 objectiveLabel[i].setVisible(true);
             } else {
-                objectiveCoefficientVector[i].setVisible(false);
+                getObjectiveCoefficientVector()[i].setVisible(false);
                 objectiveLabel[i].setVisible(false);
             }
             // Tutte le colonne fino a questa
             for (int j = 0; j < Constants.MAX_SIZE; j++)
                 // Rendi accessibile
                 if (i < getConstraintNumber() && j < variableNumber)
-                    constraintCoefficients[i][j].setVisible(true);
+                    getConstraintCoefficients()[i][j].setVisible(true);
                 else
-                    constraintCoefficients[i][j].setVisible(false);
+                    getConstraintCoefficients()[i][j].setVisible(false);
         }
 
         // Trucchetto per far modificare la visualizzazione anche qui;
@@ -637,25 +640,25 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
         // Tutte le righe fino a questa
         for (int i = 0; i < Constants.MAX_SIZE; i++) {
             if (i < constraintNumber) {
-                knownValuesVector[i].setVisible(true);
+                getKnownValuesVector()[i].setVisible(true);
                 constraintTypeSpinner[i].setVisible(true);
             } else {
-                knownValuesVector[i].setVisible(false);
+                getKnownValuesVector()[i].setVisible(false);
                 constraintTypeSpinner[i].setVisible(false);
             }
             // Tutte le colonne fino all'attuale numero di variabili
             for (int j = 0; j < Constants.MAX_SIZE; j++)
                 // Rendi accessibile
                 if (j < getVariableNumber() && i < constraintNumber)
-                    constraintCoefficients[i][j].setVisible(true);
+                    getConstraintCoefficients()[i][j].setVisible(true);
                 else
-                    constraintCoefficients[i][j].setVisible(false);
+                    getConstraintCoefficients()[i][j].setVisible(false);
         }
         this.validate();
     }
 
     /** Espone il numero di variabili artificiali. */
-    protected int getArtificialNumber() {
+    public int getArtificialNumber() {
         int a = 0;
         final Constants[] cts = getConstraintTypes();
         for (final Constants ct : cts)
@@ -665,7 +668,7 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
     }
 
     /** Restituisce il tableau iniziale (artificiale) come <code>Matrix</code>. */
-    protected Matrix getArtificialTableau() {
+    public Matrix getArtificialTableau() {
         final Constants[] cts = getConstraintTypes();
         final int v = getVariableNumber(),
         // Il numero di vincoli e' pari ad y + s.
@@ -694,7 +697,7 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
         for (int i = 0; i < y + a; i++)
             for (int j = 0; j < v; j++)
                 if (j < v)
-                    tableauMatrix.setElement(i + 1, j, constraintCoefficients[i][j].getCoefficient());
+                    tableauMatrix.setElement(i + 1, j, getConstraintCoefficients()[i][j].getCoefficient());
         // Inizializzo la matrice slack/surplus
         z = 0;
         while (z < y + s)
@@ -705,21 +708,21 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
                     tableauMatrix.setElement(i + 1, v + z++, -1);
         // Inizializzo la colonna dei termini noti
         for (int i = 0; i < y + a; i++)
-            tableauMatrix.setElement(i + 1, tc - 1, knownValuesVector[i].getCoefficient());
+            tableauMatrix.setElement(i + 1, tc - 1, getKnownValuesVector()[i].getCoefficient());
         return tableauMatrix;
     }
 
     /** Espone il numero selezionato di vincoli. */
-    protected int getConstraintNumber() {
+    public int getConstraintNumber() {
         final JComponent editor = constraintSpinner.getEditor();
         return Integer.parseInt(((JSpinner.DefaultEditor) editor).getTextField().getText());
     }
 
     /** Crea e riempie una Matrix con i coefficienti dei vincoli. */
-    protected Matrix getConstraintsAsMatrix() {
+    public Matrix getConstraintsAsMatrix() {
         // Crea la matrice e riempila con coefficienti
         final Matrix constraintMatrix = new Matrix(getVariableNumber(), getConstraintNumber());
-        constraintMatrix.fillWithCoefficients(constraintCoefficients);
+        constraintMatrix.fillWithCoefficients(getConstraintCoefficients());
         return constraintMatrix;
     }
 
@@ -727,7 +730,7 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
      * Crea un vettore di ConstraintType's con i tipi dei vincoli alla giusta
      * posizione.
      */
-    protected Constants[] getConstraintTypes() {
+    public Constants[] getConstraintTypes() {
         final Constants[] cts = new Constants[getConstraintNumber()];
         for (int i = 0; i < getConstraintNumber(); i++) {
             if ("=".equals(constraintTypeSpinner[i].getValue()))
@@ -741,7 +744,7 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
     }
 
     /** Restituisce il tableau iniziale (semplice) come <code>Matrix</code>. */
-    protected Matrix getInitialTableau() {
+    public Matrix getInitialTableau() {
         final int tr = getConstraintNumber(), tc = getVariableNumber();
         // Il tableau ha righe pari al numero di vincoli piu' uno,
         // colonne pari al numero di variabili, piu' il numero di vincoli, piu'
@@ -753,21 +756,21 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
         // Caselle di z - c (vettore)
         for (int i = 0; i < tc; i++)
             tableauMatrix.setElement(0, i, (getProblemType().equals(Constants.Maximize) ? -1 : 1)
-                    * objectiveCoefficientVector[i].getCoefficient());
+                    * getObjectiveCoefficientVector()[i].getCoefficient());
         for (int i = 0; i < tr; i++) {
             // Caselle dei termini noti (vettore colonna)
-            tableauMatrix.setElement(i + 1, tr + tc, knownValuesVector[i].getCoefficient());
+            tableauMatrix.setElement(i + 1, tr + tc, getKnownValuesVector()[i].getCoefficient());
             // Caselle dei coeff. slack (a 0 all'inizio!) (vettore)
             tableauMatrix.setElement(0, i + tc, 0);
             for (int j = 0; j < tc; j++)
-                tableauMatrix.setElement(i + 1, j, constraintCoefficients[i][j].getCoefficient());
+                tableauMatrix.setElement(i + 1, j, getConstraintCoefficients()[i][j].getCoefficient());
             for (int j = 0; j < tr; j++)
                 tableauMatrix.setElement(i + 1, tc + j, id.getElement(i, j));
         }
         return tableauMatrix;
     }
 
-    protected String getProblemString() {
+    public String getProblemString() {
         Float current;
         String lp = "<html><font face=\"monospaced\" size=\"4\">";
         final String xf = "<i>x</i><font size=\"3\"><sub>";
@@ -775,7 +778,7 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
         lp += (getProblemType().equals(Constants.Maximize) ? "Max. " : "Min. ");
         lp += "<i>Z = </i>";
         for (int i = 0; i < getVariableNumber(); i++) {
-            current = new Float(objectiveCoefficientVector[i].getCoefficient());
+            current = new Float(getObjectiveCoefficientVector()[i].getCoefficient());
             lp += (i == 0 && current.floatValue() < 0 ? "-" : "");
             lp += (Math.abs(current.floatValue()) != 1 ? Constants.valueFormat.format(Math.abs(current.doubleValue()))
                     : "")
@@ -783,7 +786,7 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
                     + (i + 1)
                     + xl
                     + (i == getVariableNumber() - 1 ? ""
-                            : (objectiveCoefficientVector[i + 1].getCoefficient() >= 0 ? " + " : " - "));
+                            : (getObjectiveCoefficientVector()[i + 1].getCoefficient() >= 0 ? " + " : " - "));
         }
         lp += "<br>s.t.<br>";
         boolean allZeroes;
@@ -791,27 +794,27 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
             lp += "&nbsp;&nbsp;&nbsp;&nbsp;";
             allZeroes = true; // Significa: "tutti 0 all'inizio del vincolo"
             for (int j = 0; j < getVariableNumber(); j++) {
-                allZeroes = allZeroes && constraintCoefficients[i][j].getCoefficient() == 0;
+                allZeroes = allZeroes && getConstraintCoefficients()[i][j].getCoefficient() == 0;
                 // Segno "-" sul primo elemento
-                lp += (j == 0 && constraintCoefficients[i][j].getCoefficient() < 0 ? "- " : "");
+                lp += (j == 0 && getConstraintCoefficients()[i][j].getCoefficient() < 0 ? "- " : "");
                 // Scrivo il coefficiente se non e' 1 o 0
-                lp += (Math.abs(constraintCoefficients[i][j].getCoefficient()) != 1
-                        && constraintCoefficients[i][j].getCoefficient() != 0 ? Constants.valueFormat.format(Math
-                        .abs(constraintCoefficients[i][j].getCoefficient())) : "");
+                lp += (Math.abs(getConstraintCoefficients()[i][j].getCoefficient()) != 1
+                        && getConstraintCoefficients()[i][j].getCoefficient() != 0 ? Constants.valueFormat.format(Math
+                        .abs(getConstraintCoefficients()[i][j].getCoefficient())) : "");
                 // Scrivo la variabile se il coeff. non e' 0
-                lp += constraintCoefficients[i][j].getCoefficient() != 0 ? xf + (j + 1) + xl : "";
+                lp += getConstraintCoefficients()[i][j].getCoefficient() != 0 ? xf + (j + 1) + xl : "";
                 // A meno che non si sia all'ultimo posto, scrivo
                 // l'operatore per il prossimo
                 // coefficiente, se il prossimo e' diverso da 0, e scrivo
                 // "+" (nel caso) solo
                 // se i precedenti coefficienti non sono tutti 0
                 lp += (j == getVariableNumber() - 1 ? ""
-                        : (constraintCoefficients[i][j + 1].getCoefficient() > 0 ? (!allZeroes ? " + " : "")
-                                : (constraintCoefficients[i][j + 1].getCoefficient() == 0 ? "" : " - ")));
+                        : (getConstraintCoefficients()[i][j + 1].getCoefficient() > 0 ? (!allZeroes ? " + " : "")
+                                : (getConstraintCoefficients()[i][j + 1].getCoefficient() == 0 ? "" : " - ")));
             }
             if (!allZeroes)
                 lp += " " + constraintTypeSpinner[i].getModel().getValue().toString() + " "
-                        + Constants.valueFormat.format(knownValuesVector[i].getCoefficient());
+                        + Constants.valueFormat.format(getKnownValuesVector()[i].getCoefficient());
             lp += "<br>";
         }
         lp += "</font></html>";
@@ -819,7 +822,7 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
     }
 
     /** Restituisce il tipo del problema (di massimo o minimo). */
-    protected Constants getProblemType() {
+    public Constants getProblemType() {
         if (problemTypeSpinner.getModel().getValue().equals("Max"))
             return Constants.Maximize;
         else
@@ -827,7 +830,7 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
     }
 
     /** Espone il numero di variabili slack. */
-    protected int getSlackNumber() {
+    public int getSlackNumber() {
         int y = 0;
         final Constants[] cts = getConstraintTypes();
         for (final Constants ct : cts)
@@ -837,7 +840,7 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
     }
 
     /** Espone il numero di variabili surplus. */
-    protected int getSurplusNumber() {
+    public int getSurplusNumber() {
         int s = 0;
         final Constants[] cts = getConstraintTypes();
         for (final Constants ct : cts)
@@ -847,12 +850,12 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
     }
 
     /** Espone il numero selezionato di variabili. */
-    protected int getVariableNumber() {
+    public int getVariableNumber() {
         final JComponent editor = varSpinner.getEditor();
         return Integer.parseInt(((JSpinner.DefaultEditor) editor).getTextField().getText());
     }
 
-    protected boolean isArtificialNeeded() {
+    public boolean isArtificialNeeded() {
         Constants[] cts;
         // Itera lungo i tipi dei vincoli. Se trova un vincolo diverso
         // dal canonico minore-o-uguale, c'e' bisogno del metodo artificiale.
@@ -863,4 +866,29 @@ public class OriginalProblemFrame extends JFrame implements ActionListener, Chan
         // Altrimenti, non c'e' bisogno del metodo artificiale.
         return false;
     }
+
+	public Coefficient[] getObjectiveCoefficientVector() {
+		return objectiveCoefficientVector;
+	}
+
+	public void setObjectiveCoefficientVector(
+			Coefficient[] objectiveCoefficientVector) {
+		this.objectiveCoefficientVector = objectiveCoefficientVector;
+	}
+
+	public Coefficient[] getKnownValuesVector() {
+		return knownValuesVector;
+	}
+
+	public void setKnownValuesVector(Coefficient[] knownValuesVector) {
+		this.knownValuesVector = knownValuesVector;
+	}
+
+	public Coefficient[][] getConstraintCoefficients() {
+		return constraintCoefficients;
+	}
+
+	public void setConstraintCoefficients(Coefficient[][] constraintCoefficients) {
+		this.constraintCoefficients = constraintCoefficients;
+	}
 }

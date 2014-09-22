@@ -1,6 +1,6 @@
 package it.silma.simply.main;
 
-import it.silma.simply.core.OriginalProblemFrame;
+import it.silma.simply.gui.OriginalProblemFrame;
 import it.silma.simply.utils.Constants;
 
 import javax.swing.JOptionPane;
@@ -15,43 +15,45 @@ import javax.swing.JOptionPane;
  */
 public class Simply {
 
+	private static void onError(String message) {
+        JOptionPane
+        .showMessageDialog(
+                null,
+                "<html>Errore irreversibile: " + message + ". <br />Il programma verr&agrave; terminato.</html>");
+        System.exit(1);
+	}
+	
     public static void main(final String[] args) {
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
         } catch (final ClassNotFoundException e) {
-            e.printStackTrace();
+            onError(e.getMessage());
         } catch (final InstantiationException e) {
-            e.printStackTrace();
+            onError(e.getMessage());
         } catch (final IllegalAccessException e) {
-            e.printStackTrace();
+            onError(e.getMessage());
         } catch (final javax.swing.UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
+            onError(e.getMessage());
         }
 
-        if (!(System.getProperty("java.version").startsWith("1.5") || System.getProperty("java.version").startsWith(
-                "1.6"))
-                || System.getProperty("java.version").startsWith("1.7")) {
-            JOptionPane
-                    .showMessageDialog(
-                            null,
-                            "<html>JRE non supportata. Questo programma richiede <br>almeno la JRE 1.5.0. Il programma verr&agrave; terminato.</html>");
-            System.exit(1);
-        }
+        try {
+			System.out.println(System.getProperty("java.vm.version"));
 
-        System.out.println(System.getProperty("java.vm.version"));
+			// Formato numerico.
+			Constants.valueFormat.setGroupingUsed(false);
+			Constants.valueFormat.setMaximumFractionDigits(2);
+			Constants.valueFormat.setMinimumFractionDigits(0);
 
-        // Formato numerico.
-        Constants.valueFormat.setGroupingUsed(false);
-        Constants.valueFormat.setMaximumFractionDigits(2);
-        Constants.valueFormat.setMinimumFractionDigits(0);
-
-        // Lancia il thread che si occupera' di mostrare la GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                showGUI();
-                /* new BetaBox(null); */
-            }
-        });
+			// Lancia il thread che si occupera' di mostrare la GUI.
+			javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			    public void run() {
+			        showGUI();
+			        /* new BetaBox(null); */
+			    }
+			});
+		} catch (Exception e) {
+            onError(e.getMessage());
+		}
     }
 
     public static void showGUI() {
