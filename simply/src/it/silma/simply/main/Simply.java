@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
  */
 public class Simply {
 
-	private static void onError(String message) {
+	public static void onError(String message) {
         JOptionPane
         .showMessageDialog(
                 null,
