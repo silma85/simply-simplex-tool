@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Simply - Simplex tool by silma85</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Simply - Simplex tool</h1>
+        <p class="header">Tool interattivo per problemi di Programmazione Lineare con il metodo del Simplesso (max. 7 var./vincoli)</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/silma85/simply-simplex-tool/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/silma85/simply-simplex-tool/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/silma85/simply-simplex-tool">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/silma85">silma85</a></p>
+
+
+      </header>
+      <section>
+        <h1>
+<a name="simply-simplex-tool" class="anchor" href="#simply-simplex-tool"><span class="octicon octicon-link"></span></a>simply-simplex-tool</h1>
+
+<h2>
+<a name="tool-interattivo-per-la-risoluzione-di-problemi-di-programmazione-lineare-con-il-metodo-del-simplesso" class="anchor" href="#tool-interattivo-per-la-risoluzione-di-problemi-di-programmazione-lineare-con-il-metodo-del-simplesso"><span class="octicon octicon-link"></span></a>Tool interattivo per la risoluzione di problemi di Programmazione Lineare con il metodo del Simplesso</h2>
+
+<p><strong>(max. 7 variabili e 7 vincoli)</strong></p>
+
+<p>La finestra principale permette di inserire un problema di Programmazione Lineare. Questo programma risolve problemi di Programmazione Lineare Continua, di massimo o minimo, con vincoli di maggioranza, minoranza od uguaglianza e termini noti positivi o negativi. Non risolve problemi di Programmazione Lineare Intera o Mista (ma può essere d'aiuto nel risolvere il rilassamento lineare in alcuni algoritmi) e assume tutte le variabili non-negative, per cui dovrai adottare alcuni accorgimenti per inserire un problema in cui le variabili non siano limitate inferiormente o abbiano limite inferiore negativo.</p>
+
+<p>Puoi: </p>
+
+<ul>
+<li>Selezionare un problema di massimizzazione o minimizzazione, utilizzando l'apposito selettore a destra.</li>
+<li>Aumentare o diminuire il numero di variabili e vincoli, subito sopra. Compariranno ulteriori caselle vuote, da riempire. Sei limitato a 7 variabili e 7 vincoli.</li>
+<li>Inserire i coefficienti delle variabili decisionali nella funzione obiettivo, segnata in giallo. Attento: se il campo diventa bordato di rosso, hai inserito qualche valore illegale. Correggi l'errore. </li>
+<li>Inserire i coefficienti dei vincoli, nei campi in bianco, e modificarne il verso con gli appositi selettori.</li>
+<li>Inserire i termini noti dei vincoli, nelle caselle in azzurro.</li>
+<li>Per problemi di due variabili, puoi visualizzare il Grafico del problema premendo l'apposito pulsante.</li>
+<li>Selezionare Esporta in AMPL... dal menu File per ottenere i files .dat e .mod da caricare in ampl.exe.</li>
+</ul><p>Se sei in dubbio, puoi premere il bottone Convalida per far comparire una scrittura più leggibile del problema da te inserito. Prova ora! Dovrai convalidare almeno una volta, per poter accedere al Risolutore. Per resettare le caselle ed i vincoli, premi il tasto Reimposta. </p>
+
+<p>Infine, quando sei soddisfatto del problema inserito, premi Risolutore per avviare l'esecuzione interattiva del Metodo del Simplesso. Verrai guidato da <strong>messaggi e domande</strong> e avrai la possibilità di ottenere una <strong>soluzione automatica passo per passo</strong>; alla fine, riceverai una <strong>valutazione indicativa</strong> del lavoro svolto. In ogni momento, potrai chiudere il Risolutore e inserire un nuovo problema. </p>
+
+<p>N. B.: Simply <em>non</em> è una guida o un bigino per il metodo del simplesso, è più una calcolatrice specializzata. Non dà istruzioni su come risolvere problemi di Programmazione Lineare: per quello consulta le tue dispense!</p>
+
+<p>Buon lavoro! </p>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>
