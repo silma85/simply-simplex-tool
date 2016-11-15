@@ -377,7 +377,8 @@ int np = 0;
         if (	(v.equals(Constants.LessThan) && !flag) ||
         		(v.equals(Constants.GreaterThan) && flag)	)
             feasible = new Area(region);
-        else if (!v.equals(Constants.Equality)) {
+        else if (	(v.equals(Constants.LessThan) && flag) ||
+        			(v.equals(Constants.GreaterThan) && !flag)	) {
             feasible = (Area) unfill.clone();
             feasible.subtract(new Area(region));
         }
