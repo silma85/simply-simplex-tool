@@ -267,7 +267,7 @@ class Painter extends JComponent {
             x *= S; // Scalati sul grafico
             // Cancellazione
             g.setPaint(this.getBackground());
-            paintRegion(g, -a / b, x, y, cts[i], ((int) b) > 0); // Coefficiente e intercetta
+            paintRegion(g, -a / b, x, y, cts[i], b); // Coefficiente e intercetta
             // Anche al di fuori dei vincoli di non-negativita'
             final Area negative = new Area(new Polygon(new int[] { -X, X, X, -X }, new int[] { -Y, -Y, Y, Y }, 4));
             negative.subtract(total);
@@ -316,8 +316,8 @@ class Painter extends JComponent {
         g.setStroke(thin);
     }
 
-    private void paintRegion(final Graphics2D g, final double m, final double x, double y, final Constants v, boolean flag) {
-        int np = 0;
+    private void paintRegion(final Graphics2D g, final double m, final double x, double y, final Constants v, double b) {
+int np = 0;
         int[] xs = null;
         int[] ys = null;
         Polygon region = null;
@@ -326,20 +326,26 @@ class Painter extends JComponent {
         // Area disegnata
         Area feasible = null;
 
-        // In ogni caso calcolo quest'area, tra gli assi e i bordi
-        // Qui calcolo come se avessi un vincolo di minoranza
+        /* In ogni caso calcolo quest'area, tra gli assi e i bordi
+		 *
+		 * 'b' è il valore del secondo coefficiente.
+		 * Siccome calcolo OVUNQUE come se avessi un vincolo di minoranza devo tener conto del suo segno per poter disegnare
+		 * la regione corretta in seguito. (ovvero se invertire o meno)
+		 */
+		boolean flag = ((int) b) < 0;
+		
         if (m < 0 && !Double.isInfinite(m)) { // La retta scende
             xs = new int[] { 0, 0, (int) (-y / m) };
             ys = new int[] { 0, (int) y, 0 };
             np = 3;
         } else if (m > 0 && !Double.isInfinite(m)) { // La retta sale
             if (x > 0) {
-                xs = new int[] { 0, 0, (int) (-y / m), (int) ((Y - y) / m) };
-                ys = new int[] { Y, 0, 0, Y };
-                np = 4;
+                xs = new int[] { (int) (-y / m), X, (int) ((Y - y) / m) };
+                ys = new int[] { 0, 0, Y };
+                np = 3;
             } else {
-                xs = new int[] { 0, 0, X };
-                ys = new int[] { Y, (int) y, (int) (m * X + y) };
+            	xs = new int[] { (int) (-y / m), X, X };
+            	ys = new int[] { 0, 0, (int) (m * X + y) };
                 np = 3;
             }
         } else if (m == 0.0) { // La retta e' coricata
@@ -354,10 +360,20 @@ class Painter extends JComponent {
             xs = new int[] { -X, -X, X, X };
             ys = new int[] { -Y, Y, Y, -Y };
             np = 4;
+			// Per farlo cadere sempre nel primo caso del prossimo if
+            flag = v.equals(Constants.GreaterThan);
         }
         region = new Polygon(xs, ys, np);
         
-        // Se il vincolo e' di minoranza
+        /* Qui si decide se invertire o meno l'area.
+		 * Avendo presupposto si tratti di un vincolo di minoranza ho i seguenti casi:
+		 * 	- v. di min. e b>0 oppure v. di magg. e b<0 (b<0 implica invertire la disuguaglianza)
+		 *		- l'area è quella corretta
+		 *	- v. di magg. e b>0 oppure v. di min. e b<0 ( ^ vedi sopra ^ )
+		 *		- complemento l'area calcolata
+		 *	- v. di uguaglianza
+		 *		- nessuna area
+		 */
         if (	(v.equals(Constants.LessThan) && !flag) ||
         		(v.equals(Constants.GreaterThan) && flag)	)
             feasible = new Area(region);
@@ -365,7 +381,6 @@ class Painter extends JComponent {
             feasible = (Area) unfill.clone();
             feasible.subtract(new Area(region));
         }
-        // Se il vincolo e' di uguaglianza, nessuna area.
         else if (v.equals(Constants.Equality))
             feasible = new Area();
 
