@@ -16,8 +16,6 @@ import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 
@@ -44,12 +42,6 @@ public class GraphicDialog extends JDialog implements ActionListener {
         this.setResizable(false);
         this.setLocationByPlatform(true);
         this.opf = opf;
-        this.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentMoved(ComponentEvent e) {
-                gv.repaint();
-            }
-        });
 
         final JPanel contentPane = new JPanel(new BorderLayout()), buttonPanel = new JPanel(new BorderLayout()), graphPanel = new JPanel();
         contentPane.setBackground(new Color(245, 245, 255));
@@ -275,7 +267,7 @@ class Painter extends JComponent {
             x *= S; // Scalati sul grafico
             // Cancellazione
             g.setPaint(this.getBackground());
-            paintRegion(g, -a / b, x, y, cts[i]); // Coefficiente e intercetta
+            paintRegion(g, -a / b, x, y, cts[i], ((int) b) > 0); // Coefficiente e intercetta
             // Anche al di fuori dei vincoli di non-negativita'
             final Area negative = new Area(new Polygon(new int[] { -X, X, X, -X }, new int[] { -Y, -Y, Y, Y }, 4));
             negative.subtract(total);
@@ -324,7 +316,7 @@ class Painter extends JComponent {
         g.setStroke(thin);
     }
 
-    private void paintRegion(final Graphics2D g, final double m, final double x, double y, final Constants v) {
+    private void paintRegion(final Graphics2D g, final double m, final double x, double y, final Constants v, boolean flag) {
         int np = 0;
         int[] xs = null;
         int[] ys = null;
@@ -346,8 +338,8 @@ class Painter extends JComponent {
                 ys = new int[] { Y, 0, 0, Y };
                 np = 4;
             } else {
-                xs = new int[] { (int) (-y / m), X, X };
-                ys = new int[] { 0, 0, (int) (m * X + y) };
+                xs = new int[] { 0, 0, X };
+                ys = new int[] { Y, (int) y, (int) (m * X + y) };
                 np = 3;
             }
         } else if (m == 0.0) { // La retta e' coricata
@@ -364,11 +356,12 @@ class Painter extends JComponent {
             np = 4;
         }
         region = new Polygon(xs, ys, np);
-
+        
         // Se il vincolo e' di minoranza
-        if (v.equals(Constants.LessThan))
+        if (	(v.equals(Constants.LessThan) && !flag) ||
+        		(v.equals(Constants.GreaterThan) && flag)	)
             feasible = new Area(region);
-        else if (v.equals(Constants.GreaterThan)) {
+        else if (!v.equals(Constants.Equality)) {
             feasible = (Area) unfill.clone();
             feasible.subtract(new Area(region));
         }
