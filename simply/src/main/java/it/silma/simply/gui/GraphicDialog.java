@@ -29,14 +29,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
-@SuppressWarnings("serial")
 public class GraphicDialog extends JDialog implements ActionListener {
 
-    private OriginalProblemFrame opf;
+    private final OriginalProblemFrame opf;
     private Painter graph;
 
-    private JButton closeButton = new JButton("Chiudi"), zoomIn = new JButton("+"), zoomOut = new JButton("-"),
-            refresh = new JButton("Aggiorna");
+    private final JButton closeButton = new JButton("Chiudi");
+    private final JButton zoomIn = new JButton("+");
+    private final JButton zoomOut = new JButton("-");
+    private final JButton refresh = new JButton("Aggiorna");
 
     public GraphicDialog(final OriginalProblemFrame opf) {
         super(opf, "Grafico del problema");
@@ -135,7 +136,6 @@ public class GraphicDialog extends JDialog implements ActionListener {
     }
 }
 
-@SuppressWarnings("serial")
 class Painter extends JComponent {
     private final int X = 512;
     private final int Y = 512;
@@ -148,9 +148,7 @@ class Painter extends JComponent {
 
     final BasicStroke thin = new BasicStroke(1.0f);
 
-    final BasicStroke thick = new BasicStroke(2.5f);
-
-    final float dash[] = { 4.0f };
+    final float[] dash = { 4.0f };
     final BasicStroke dashed = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 2.0f);
 
     public Painter(final OriginalProblemFrame opf) {
@@ -258,9 +256,9 @@ class Painter extends JComponent {
 
     private void paintConstraints(final Graphics2D g) {
         final Constants[] cts = opf.getConstraintTypes();
-        double a = 0, b = 0, c = 0;
-        double x = 0.0, // Intersezione con 0 sull'asse x (radice)
-        y = 0.0; // Intersezione con 0 sull'asse y (intercetta)
+        double a, b, c;
+        double x, // Intersezione con 0 sull'asse x (radice)
+        y; // Intersezione con 0 sull'asse y (intercetta)
         // Riempi la regione ammissibile
         g.setPaint(new Color(185, 185, 225));
         g.fill(total);
@@ -325,14 +323,14 @@ class Painter extends JComponent {
     }
 
     private void paintRegion(final Graphics2D g, final double m, final double x, double y, final Constants v) {
-        int np = 0;
-        int[] xs = null;
-        int[] ys = null;
-        Polygon region = null;
+        int np;
+        int[] xs;
+        int[] ys;
+        Polygon region;
         // Area totale manipolabile senza alterare l'originale
         final Area unfill = (Area) total.clone();
         // Area disegnata
-        Area feasible = null;
+        Area feasible;
 
         // In ogni caso calcolo quest'area, tra gli assi e i bordi
         // Qui calcolo come se avessi un vincolo di minoranza
@@ -373,8 +371,9 @@ class Painter extends JComponent {
             feasible.subtract(new Area(region));
         }
         // Se il vincolo e' di uguaglianza, nessuna area.
-        else if (v.equals(Constants.Equality))
+        else {
             feasible = new Area();
+        }
 
         final Area unregion = new Area(feasible);
         unfill.subtract(unregion);
@@ -390,6 +389,7 @@ class Painter extends JComponent {
         problemLabel.setBounds(ins.left + X - 195, ins.top + 5, size.width, size.height);
     }
 
+    @SuppressWarnings("unused")
     protected double getObjective() {
         return 0.0;
     }

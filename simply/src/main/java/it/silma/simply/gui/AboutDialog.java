@@ -11,8 +11,6 @@ import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -28,7 +26,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
-@SuppressWarnings("serial")
 public class AboutDialog extends JDialog {
 
 	public AboutDialog(final Frame parent, final String title) {
@@ -58,11 +55,9 @@ public class AboutDialog extends JDialog {
 
 		final JButton closeButton = new JButton("Chiudi");
 		final AboutDialog about = this;
-		closeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				about.setVisible(false);
-				about.dispose();
-			}
+		closeButton.addActionListener(e -> {
+			about.setVisible(false);
+			about.dispose();
 		});
 		final JPanel close = new JPanel();
 		close.add(closeButton);
@@ -92,10 +87,8 @@ public class AboutDialog extends JDialog {
 						try {
 							URI uri = new URI(href);
 							desktop.browse(uri);
-						} catch (URISyntaxException use) {
+						} catch (URISyntaxException | IOException use) {
 							Simply.onError(use.getMessage());
-						} catch (IOException ioe) {
-							Simply.onError(ioe.getMessage());
 						}
 					}
 				}

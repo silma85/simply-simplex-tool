@@ -21,7 +21,7 @@ import javax.swing.event.DocumentListener;
  * Helper class per definire un JFormattedTextField con un valore iniziale, un
  * formato, dimensioni e bordo nullo.
  */
-@SuppressWarnings("serial")
+@SuppressWarnings("unused")
 public class Coefficient extends JFormattedTextField implements DocumentListener {
     private final Border normalBorder = BorderFactory.createEtchedBorder();
     private final Border errorBorder = BorderFactory.createLineBorder(Color.RED, 1);
@@ -45,7 +45,7 @@ public class Coefficient extends JFormattedTextField implements DocumentListener
     public Coefficient(final float value, final NumberFormat valueFormat, final int row, final int col) {
         super(valueFormat);
 
-        this.setValue(new Float(value));
+        this.setValue(value);
         this.setColumns(4);
         this.setBorder(normalBorder);
         this.setRow(row);
@@ -57,25 +57,19 @@ public class Coefficient extends JFormattedTextField implements DocumentListener
         this.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(final FocusEvent fe) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        ((JTextField) fe.getSource()).selectAll();
-                    }
-                });
+                SwingUtilities.invokeLater(() -> ((JTextField) fe.getSource()).selectAll());
             }
         });
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(final MouseEvent me) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        // Se non siamo in una situazione in cui si usano i clic
-                        // del mouse per altri scopi,
-                        // seleziona il testo al clic del mouse.
-                        if (!Constants.STEP.equals(Constants.EnteringSelect)
-                                && !Constants.STEP.equals(Constants.ExitingSelect))
-                            ((JTextField) me.getSource()).selectAll();
-                    }
+                SwingUtilities.invokeLater(() -> {
+                    // Se non siamo in una situazione in cui si usano i clic
+                    // del mouse per altri scopi,
+                    // seleziona il testo al clic del mouse.
+                    if (!Constants.STEP.equals(Constants.EnteringSelect)
+                            && !Constants.STEP.equals(Constants.ExitingSelect))
+                        ((JTextField) me.getSource()).selectAll();
                 });
             }
         });

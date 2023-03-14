@@ -51,10 +51,8 @@ public class Solver {
     /** Numero di variabili slack. */
     int slackNumber;
     /** Numero di variabili surplus. */
-    /** Numero di variabili slack. */
     int surplusNumber;
     /** Numero di variabili artificiali. */
-    /** Numero di variabili slack. */
     int artificialNumber;
 
     /**
@@ -119,7 +117,7 @@ public class Solver {
             // Valori iniziali del vettore di costo ridotto e delle variabili
             // slack
             for (int i = 0; i < variablesNumber; i++) {
-                float reducedCost = 0;
+                float reducedCost;
                 if (solverData.getSourceProblem().getProblemType().equals(Constants.Maximize))
                     reducedCost = -solverData.getSourceProblem().getObjectiveCoefficientVector()[i].getCoefficient();
                 else
@@ -138,7 +136,7 @@ public class Solver {
             // Valori iniziali del vettore di costo ridotto e delle variabili
             // slack
             for (int i = 0; i < variablesNumber; i++) {
-                float reducedCost = 0;
+                float reducedCost;
                 if (solverData.getSourceProblem().getProblemType().equals(Constants.Maximize))
                     reducedCost = -solverData.getSourceProblem().getObjectiveCoefficientVector()[i].getCoefficient();
                 else
@@ -179,8 +177,8 @@ public class Solver {
      * Recupera la variabile con l'ID (o, che e' lo stesso, la posizione) nella
      * BFS o nelle colonne del tableau) specificata.
      * 
-     * @param i
-     * @return
+     * @param i Posizione nella colonna specificata.
+     * @return La variabile indicata.
      */
     private Variable getVariable(final int i) {
         return variables[i];
@@ -190,7 +188,7 @@ public class Solver {
         for (final Variable variable : variables)
             if (variable.rowId == r - 1)
                 return variable;
-        return null; // Non dovrei mai arrivare qui.
+        throw new IllegalStateException("No Variable found, but there should be one.");
     }
 
     public float[] getBFS() {
@@ -230,9 +228,7 @@ public class Solver {
 
     /** Esegue il test di ammissibilita' alla fine della Fase Uno. */
     public boolean isFeasible() {
-        if (getTableau().getElement(0, solverData.getExtTableau()[0].length - 1) != 0)
-            return false;
-        return true;
+        return getTableau().getElement(0, solverData.getExtTableau()[0].length - 1) == 0;
     }
 
     /**
@@ -402,18 +398,13 @@ public class Solver {
                     .setElement(i, getTableau().getNc() - artificialNumber - 1, getTableau().getElement(i, getTableau().getNc() - 1));
         }
         setTableau(newTableau);
-        for (int i = 0; i < newVars.length; i++)
-            // Dovrebbe andare bene cosi' com'e'.
-            newVars[i] = variables[i];
+        // Dovrebbe andare bene così com'è.
+        System.arraycopy(variables, 0, newVars, 0, newVars.length);
         variables = newVars;
         bfs = newBfs; // Imposto la lunghezza
         bfs = getBFS();
         // Imposto le nuove quantita'.
         artificialNumber = 0;
-        // Per il GC
-        newTableau = null;
-        newVars = null;
-        newBfs = null;
     }
 
 	public static int getPvtCol() {

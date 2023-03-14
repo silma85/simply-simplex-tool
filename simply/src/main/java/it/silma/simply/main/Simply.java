@@ -40,12 +40,8 @@ public class Simply {
 			Constants.valueFormat.setMinimumFractionDigits(0);
 
 			// Lancia il thread che si occupera' di mostrare la GUI.
-			javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			    public void run() {
-			        showGUI();
-			        /* new BetaBox(null); */
-			    }
-			});
+            /* new BetaBox(null); */
+            javax.swing.SwingUtilities.invokeLater(Simply::showGUI);
 		} catch (Exception e) {
             onError(e.getMessage());
 		}

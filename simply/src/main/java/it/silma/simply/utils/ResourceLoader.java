@@ -22,15 +22,6 @@ public class ResourceLoader extends URLStreamHandler {
 	public static ImageIcon loadImageIcon(String resource) {
 
 		try {
-			/*InputStream in = ImageIcon.class.getResourceAsStream("/" + Constants.pathToRes + resource);
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-			int d;
-			while ((d = in.read()) != -1) {
-				out.write(d);
-			}
-
-			byte[] bytes = out.toByteArray();*/
 			URL url = ResourceLoader.class.getResource(Constants.pathToRes + "logo.png");
 			return new ImageIcon(url);
 
@@ -42,14 +33,7 @@ public class ResourceLoader extends URLStreamHandler {
 	}
 
 	public static URL loadURL(String resource) {
-
-		try {
-			return new URL(null, "classpath:" + Constants.pathToRes + resource, new ResourceLoader());
-		} catch (MalformedURLException e) {
-			Simply.onError(e.getMessage());
-		}
-
-		return null;
+		return ResourceLoader.class.getResource(Constants.pathToRes + resource);
 	}
 
 	@Override

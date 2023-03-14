@@ -87,13 +87,6 @@ public class Exporter {
     }
 
     /*
-     * Genera un file MPS.
-     */
-    public void generateMPS() {
-
-    }
-
-    /*
      * Genera il DAT file di AMPL.
      */
     private void generateAMPLDat(final PrintStream dat) {
@@ -103,7 +96,7 @@ public class Exporter {
         final Coefficient[][] sorted = new Coefficient[opf.getConstraintNumber()][opf.getVariableNumber()];
         int lt = 0, gt = 0, eq = 0;
         // Riempio i tre vettori con valori che rappresentano i termini noti
-        // di ciascuno dei tipi di vincoli. Servira' in seguito.
+        // di ciascuno dei tipi di vincoli. Servirà in seguito.
         for (int i = 0; i < cts.length; i++) {
             if (cts[i].equals(Constants.LessThan)) {
                 blt[lt] = opf.getKnownValuesVector()[i].getCoefficient();
@@ -238,7 +231,7 @@ public class Exporter {
             mod.println("param bGT{GT};\t\t# Valori dei termini noti nei vincoli di maggioranza");
         if (opf.getArtificialNumber() - opf.getSurplusNumber() > 0)
             mod.println("param bET{ET};\t\t# Valori dei termini noti nei vincoli di uguaglianza");
-        // E' necessario dividere i vincoli nei tre tipi.
+        // È necessario dividere i vincoli nei tre tipi.
         if (opf.getSlackNumber() > 0)
             mod.println("param aLT{LT,V};\t\t# Coefficienti dei vincoli di minoranza");
         if (opf.getSurplusNumber() > 0)
@@ -270,7 +263,6 @@ public class Exporter {
     }
 }
 
-@SuppressWarnings("serial")
 class AmplChooser extends JFileChooser implements ActionListener {
     public AmplChooser() {
         super(System.getProperty("user.dir"));
@@ -292,10 +284,8 @@ class AmplFilter extends FileFilter {
             if (f.substring(s + 1).equals("mod") || f.substring(s + 1).equals("dat"))
                 return true;
         // Se è una directory, accettala.
-        if (file.isDirectory())
-            return true;
+        return file.isDirectory();
         // Altrimenti, no.
-        return false;
     }
 
     @Override

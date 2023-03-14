@@ -1,23 +1,28 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"></head>
+<head><META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+body {font-family: Segoe UI, Verdana, sans-serif; font-size: 12pt}
+.red    {color: red;}
+.orange    {color: orange;}
+.blue    {color: blue;}
+</style>
+</head>
 <body>
-<font face="Segoe UI, Verdana, sans-serif" size="3">
-<p>Benvenuto in <font color="red"><b>Simply</b></font>, strumento interattivo per il <b>Metodo del Simplesso</b>.</p>
+<p>Benvenuto in <b class="red">Simply</b>, strumento interattivo per il <b>Metodo del Simplesso</b>.</p>
 <p>La finestra principale permette di inserire un problema di <b>Programmazione Lineare</b>. Questo programma risolve problemi di <b>Programmazione Lineare Continua</b>, di massimo o minimo, con vincoli di maggioranza, minoranza od uguaglianza e termini noti positivi o negativi. Non risolve problemi di Programmazione Lineare Intera o Mista (ma pu&ograve; essere d'aiuto nel risolvere il <i>rilassamento lineare</i> in alcuni algoritmi) e assume tutte le variabili <i>non-negative</i>, per cui dovrai adottare alcuni accorgimenti per inserire un problema in cui le variabili non siano limitate inferiormente o abbiano limite inferiore negativo.
 </p><p>Puoi:
 <ul>
 <li>Selezionare un problema di <i>massimizzazione</i> o <i>minimizzazione</i>, utilizzando l'apposito selettore a destra.</li>
 <li>Aumentare o diminuire il numero di <i>variabili</i> e <i>vincoli</i>, subito sopra. Compariranno ulteriori caselle vuote, da riempire. Sei limitato a <b>7 variabili</b> e <b>7 vincoli</b>.</li>
-<li>Inserire i coefficienti delle <b>variabili decisionali</b> nella <b>funzione obiettivo</b>, segnata in <font color="orange"><b>giallo</b></font>.</li> Attento: se il campo diventa bordato di <font color="red">rosso</font>, hai inserito qualche valore illegale. Correggi l'errore.
+<li>Inserire i coefficienti delle <b>variabili decisionali</b> nella <b>funzione obiettivo</b>, segnata in <b class="orange">giallo</b>.</li> Attento: se il campo diventa bordato di <em class="red">rosso</em>, hai inserito qualche valore illegale. Correggi l'errore.
 <li>Inserire i coefficienti dei <b>vincoli</b>, nei campi in <b>bianco</b>, e modificarne il verso con gli appositi selettori.</li>
-<li>Inserire i <b>termini noti</b> dei vincoli, nelle caselle in <font color="blue"><b>azzurro</b></font>.</li>
+<li>Inserire i <b>termini noti</b> dei vincoli, nelle caselle in <b class="blue">azzurro</b>.</li>
 <li>Per problemi di due variabili, puoi visualizzare il <b>Grafico</b> del problema premendo l'apposito pulsante.</li>
 <li>Selezionare <b>Esporta in AMPL...</b> dal menu <b>File</b> per ottenere i files .dat e .mod da caricare in <code>ampl.exe</code>.
 </ul></p>
 Se sei in dubbio, puoi premere il bottone <b>Convalida</b> per far comparire una scrittura pi&ugrave; leggibile del problema da te inserito. <b>Prova ora!</b> Dovrai convalidare almeno una volta, per poter accedere al Risolutore.
 <p>Per resettare le caselle ed i vincoli, premi il tasto <b>Reimposta</b>. </p><p>Infine, quando sei soddisfatto del problema inserito, premi <b>Risolutore</b> per avviare l'esecuzione interattiva del Metodo del Simplesso. Verrai guidato da messaggi e domande; alla fine, riceverai una valutazione indicativa del lavoro svolto. In ogni momento, potrai <b>chiudere il Risolutore</b> e inserire un nuovo problema. </p><br><b>Buon lavoro!</b>
-</font>
 </body>
 </html>
