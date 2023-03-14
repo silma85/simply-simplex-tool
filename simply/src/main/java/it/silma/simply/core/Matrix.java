@@ -23,7 +23,7 @@ public class Matrix {
      * 
      * @param n
      *            La dimensione della matrice.
-     * @return
+     * @return La matrice identità.
      */
     public static Matrix identity(final int n) {
         final Matrix id = new Matrix(n, n);
@@ -128,6 +128,7 @@ public class Matrix {
     /**
      * Stampa su standard output.
      */
+    @SuppressWarnings("unused")
     public void printToStdOut() {
         for (int i = 0; i < nr; i++) {
             for (int j = 0; j < nc; j++)
@@ -173,6 +174,7 @@ public class Matrix {
                 this.setElement(i, j, origin[i + sr][j + sc].getCoefficient());
     }
 
+    @SuppressWarnings("unused")
     public Coefficient[][] getCoeffficients(final NumberFormat valueFormat) {
         // Temporary Coefficient Matrix
         final Coefficient[][] teCoMa = new Coefficient[nr][nc];
@@ -205,6 +207,7 @@ public class Matrix {
      *             Lancia un'eccezione se le matrici non sono moltiplicabili
      *             riga-per-colonna.
      */
+    @SuppressWarnings("unused")
     protected Matrix multiply(final Matrix b) throws Exception {
         if (nc != b.getNr())
             throw new Exception(

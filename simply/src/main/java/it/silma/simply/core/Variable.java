@@ -11,9 +11,9 @@ package it.silma.simply.core;
  */
 public class Variable {
     // Se e' slack, surplus o artificiale
-    protected boolean isSlack = false, isSurplus = false, isArtificial = false;
+    protected boolean isSlack, isSurplus, isArtificial;
     // Se e' di base oppure no
-    protected boolean isBasic = false;
+    protected boolean isBasic;
 
     // Identificativo: per prime vengono le variabili decisionali,
     // poi le variabili slack/surplus ordinate secondo i vincoli,

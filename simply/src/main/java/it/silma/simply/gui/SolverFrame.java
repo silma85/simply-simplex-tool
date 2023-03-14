@@ -41,7 +41,6 @@ import javax.swing.border.Border;
  * @author Silma
  * 
  */
-@SuppressWarnings("serial")
 public class SolverFrame extends JFrame implements ActionListener {
     /** Frame contentente il problema e tutti i dati iniziali. */
     private OriginalProblemFrame sourceProblem;
@@ -56,11 +55,8 @@ public class SolverFrame extends JFrame implements ActionListener {
     private final JPanel bfsPanel;
     // Pannelli
     private final JPanel buttonPanel;
-    // Pannelli
-    private final JPanel inputPanel;
     // Aree dati
     private JTextPane requestsPane;
-    private JScrollPane requestsScrollArea;
     private JLabel statusArea;
     // Bottoni
     private JButton validateButton;
@@ -100,7 +96,8 @@ public class SolverFrame extends JFrame implements ActionListener {
         centerPanel = new JPanel();
         bfsPanel = new JPanel(new GridLayout(2, 0));
         buttonPanel = new JPanel(new BorderLayout());
-        inputPanel = new JPanel(new BorderLayout());
+        // Pannelli
+        JPanel inputPanel = new JPanel(new BorderLayout());
 
         // Colori
         topPanel.setBackground(null);
@@ -289,7 +286,7 @@ public class SolverFrame extends JFrame implements ActionListener {
             setRequestText(Messages.TABLEAU_PHASE_ONE_BEGIN);
         requestsPane.setEditable(false);
         requestsPane.setBackground(this.getContentPane().getBackground());
-        requestsScrollArea = new JScrollPane(requestsPane);
+        JScrollPane requestsScrollArea = new JScrollPane(requestsPane);
         requestsScrollArea.setPreferredSize(new Dimension(0, 150));
         requestsScrollArea.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         requestsScrollArea.setBackground(this.getContentPane().getBackground());
@@ -484,112 +481,100 @@ public class SolverFrame extends JFrame implements ActionListener {
         final JMenu fileMenu = new JMenu("File"), helpMenu = new JMenu("Aiuto");
         // File->Esci
         final JMenuItem exitFileMenu = new JMenuItem("Esci");
-        exitFileMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent e) {
-                System.exit(0);
-            }
-        });
+        exitFileMenu.addActionListener(e -> System.exit(0));
         fileMenu.setMnemonic(KeyEvent.VK_F);
         fileMenu.add(exitFileMenu);
         // Aiuto->Legenda
         final JDialog legendDialog = new JDialog(this, "Legenda");
         final JMenuItem legendHelpMenu = new JMenuItem("Legenda");
-        legendHelpMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent e) {
-                final JPanel contentPane = new JPanel(new BorderLayout());
-                contentPane.setBackground(new Color(245, 245, 255));
-                // Rettangolino colorato
-                JTextField text = new JTextField();
-                // Lettere x, s, a
-                final String x = "<html><font face=\"serif\" size=\"4\"><i>x</i><sub><font size=\"3\">i</font></sub></font></html>";
-                final String s = "<html><font face=\"serif\" size=\"4\"><i>s</i><sub><font size=\"3\">i</font></sub></font></html>";
-                final String a = "<html><font face=\"serif\" size=\"4\"><i>a</i><sub><font size=\"3\">i</font></sub></font></html>";
-                final String Z = "<html><font face=\"serif\" size=\"4\"><i>Z</i></font></html>";
-                // Simboli della legenda
-                final JPanel legendPane = new JPanel(new FlowLayout());
-                final JPanel left = new JPanel(new GridLayout(9, 1, 0, 4)); // Pannello
-                // con
-                // colori,
-                // variabili
-                left.setPreferredSize(new Dimension(40, 270));
-                left.setBackground(null);
-                text.setBackground(Color.YELLOW);
-                text.setEnabled(false);
-                left.add(text); // Rettangolo giallo
-                text = new JTextField();
-                text.setBackground(Color.CYAN);
-                text.setEnabled(false);
-                left.add(text); // Rettangolo azzurro
-                text = new JTextField();
-                text.setBackground(Color.PINK);
-                text.setEnabled(false);
-                left.add(text); // Rettangolo rosa
-                text = new JTextField();
-                text.setBackground(new Color(200, 140, 200));
-                text.setEnabled(false);
-                left.add(text); // Rettangolo violetto
-                text = new JTextField();
-                text.setBackground(new Color(180, 220, 180));
-                text.setEnabled(false);
-                left.add(text); // Rettangolo verdino
-                left.add(new JLabel(x)); // Variabile x
-                left.add(new JLabel(s)); // Variabile s
-                left.add(new JLabel(a)); // Variabile a
-                left.add(new JLabel(Z)); // Valore Z
-                // Testo della legenda
-                final JPanel right = new JPanel(new GridLayout(9, 1, 0, 4)); // Pannello
-                // delle
-                // spiegazioni
-                right.setPreferredSize(new Dimension(300, 270));
-                right.setBackground(null);
-                right.add(new JLabel("Coefficiente della funzione obiettivo"));
-                right.add(new JLabel("Termine noto"));
-                right.add(new JLabel("Coefficiente di una variabile artificiale"));
-                right.add(new JLabel("Valore della funzione obiettivo"));
-                right.add(new JLabel("Valore di una variabile nella BFS, oppure riga o colonna pivot"));
-                right.add(new JLabel("Variabile decisionale"));
-                right.add(new JLabel("Variabile slack o surplus"));
-                right.add(new JLabel("Variabile artificiale"));
-                right.add(new JLabel("Etichetta del valore obiettivo (con segno - se minimizzazione)"));
-                // Aggiungo i pannelli di destra e sinistra al pannello
-                // della
-                // legenda
-                legendPane.add(left);
-                legendPane.add(right);
-                legendPane.setBackground(null);
-                legendPane.setOpaque(true);
-                // Bottone di chiusura
-                final JButton closeButton = new JButton("Chiudi");
-                closeButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(final ActionEvent e) {
-                        legendDialog.setVisible(false);
-                        legendDialog.dispose();
-                    }
-                });
-                final JPanel closePanel = new JPanel(new FlowLayout());
-                closePanel.setAlignmentY(CENTER_ALIGNMENT);
-                closePanel.setBackground(null);
-                closePanel.add(closeButton);
-                // Shake & serve cold
-                contentPane.add(legendPane, BorderLayout.CENTER);
-                contentPane.add(closePanel, BorderLayout.SOUTH);
-                legendDialog.setResizable(false);
-                legendDialog.setContentPane(contentPane);
-                legendDialog.setLocationByPlatform(true);
-                legendDialog.pack();
-                legendDialog.setVisible(true);
-            }
+        legendHelpMenu.addActionListener(e -> {
+            final JPanel contentPane = new JPanel(new BorderLayout());
+            contentPane.setBackground(new Color(245, 245, 255));
+            // Rettangolino colorato
+            JTextField text = new JTextField();
+            // Lettere x, s, a
+            final String x = "<html><font face=\"serif\" size=\"4\"><i>x</i><sub><font size=\"3\">i</font></sub></font></html>";
+            final String s = "<html><font face=\"serif\" size=\"4\"><i>s</i><sub><font size=\"3\">i</font></sub></font></html>";
+            final String a = "<html><font face=\"serif\" size=\"4\"><i>a</i><sub><font size=\"3\">i</font></sub></font></html>";
+            final String Z = "<html><font face=\"serif\" size=\"4\"><i>Z</i></font></html>";
+            // Simboli della legenda
+            final JPanel legendPane = new JPanel(new FlowLayout());
+            final JPanel left = new JPanel(new GridLayout(9, 1, 0, 4)); // Pannello
+            // con
+            // colori,
+            // variabili
+            left.setPreferredSize(new Dimension(40, 270));
+            left.setBackground(null);
+            text.setBackground(Color.YELLOW);
+            text.setEnabled(false);
+            left.add(text); // Rettangolo giallo
+            text = new JTextField();
+            text.setBackground(Color.CYAN);
+            text.setEnabled(false);
+            left.add(text); // Rettangolo azzurro
+            text = new JTextField();
+            text.setBackground(Color.PINK);
+            text.setEnabled(false);
+            left.add(text); // Rettangolo rosa
+            text = new JTextField();
+            text.setBackground(new Color(200, 140, 200));
+            text.setEnabled(false);
+            left.add(text); // Rettangolo violetto
+            text = new JTextField();
+            text.setBackground(new Color(180, 220, 180));
+            text.setEnabled(false);
+            left.add(text); // Rettangolo verdino
+            left.add(new JLabel(x)); // Variabile x
+            left.add(new JLabel(s)); // Variabile s
+            left.add(new JLabel(a)); // Variabile a
+            left.add(new JLabel(Z)); // Valore Z
+            // Testo della legenda
+            final JPanel right = new JPanel(new GridLayout(9, 1, 0, 4)); // Pannello
+            // delle
+            // spiegazioni
+            right.setPreferredSize(new Dimension(300, 270));
+            right.setBackground(null);
+            right.add(new JLabel("Coefficiente della funzione obiettivo"));
+            right.add(new JLabel("Termine noto"));
+            right.add(new JLabel("Coefficiente di una variabile artificiale"));
+            right.add(new JLabel("Valore della funzione obiettivo"));
+            right.add(new JLabel("Valore di una variabile nella BFS, oppure riga o colonna pivot"));
+            right.add(new JLabel("Variabile decisionale"));
+            right.add(new JLabel("Variabile slack o surplus"));
+            right.add(new JLabel("Variabile artificiale"));
+            right.add(new JLabel("Etichetta del valore obiettivo (con segno - se minimizzazione)"));
+            // Aggiungo i pannelli di destra e sinistra al pannello
+            // della
+            // legenda
+            legendPane.add(left);
+            legendPane.add(right);
+            legendPane.setBackground(null);
+            legendPane.setOpaque(true);
+            // Bottone di chiusura
+            final JButton closeButton = new JButton("Chiudi");
+            closeButton.addActionListener(e1 -> {
+                legendDialog.setVisible(false);
+                legendDialog.dispose();
+            });
+            final JPanel closePanel = new JPanel(new FlowLayout());
+            closePanel.setAlignmentY(CENTER_ALIGNMENT);
+            closePanel.setBackground(null);
+            closePanel.add(closeButton);
+            // Shake & serve cold
+            contentPane.add(legendPane, BorderLayout.CENTER);
+            contentPane.add(closePanel, BorderLayout.SOUTH);
+            legendDialog.setResizable(false);
+            legendDialog.setContentPane(contentPane);
+            legendDialog.setLocationByPlatform(true);
+            legendDialog.pack();
+            legendDialog.setVisible(true);
         });
         helpMenu.add(legendHelpMenu);
         helpMenu.addSeparator();
         // Aiuto->Informazioni su
         final JMenuItem aboutHelpMenu = new JMenuItem("Informazioni su Simply");
         final AboutDialog about = new AboutDialog(this, "Informazioni su Simply");
-        aboutHelpMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent e) {
-                about.setVisible(true);
-            }
-        });
+        aboutHelpMenu.addActionListener(e -> about.setVisible(true));
         helpMenu.setMnemonic(KeyEvent.VK_F1);
         helpMenu.add(aboutHelpMenu);
         // Aggiunta alla barra

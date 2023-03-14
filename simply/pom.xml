@@ -6,7 +6,14 @@
 
     <groupId>it.vermilionsands</groupId>
     <artifactId>simply-simplex-tool</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
+
+    <description>Strumento interattivo per il Metodo del Simplesso.</description>
+    <organization>
+        <name>Alessandro Putzu</name>
+        <url>https://github.com/silma85</url>
+    </organization>
+    <inceptionYear>2009</inceptionYear>
 
     <dependencies>
         <dependency>
@@ -22,4 +29,66 @@
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>2.3.3</version>
+                <executions>
+                    <execution>
+                        <id>l4j-clui</id>
+                        <phase>package</phase>
+                        <goals><goal>launch4j</goal></goals>
+                        <configuration>
+                            <headerType>gui</headerType>
+                            <outfile>${project.build.directory}/SimplexTool.exe</outfile>
+                            <icon>src/main/resources/logo.ico</icon>
+                            <jar>lib/simply-simplex-tool-${project.version}.jar</jar>
+                            <dontWrapJar>true</dontWrapJar>
+                            <errTitle>simply</errTitle>
+                            <classPath>
+                                <mainClass>it.silma.simply.main.Simply</mainClass>
+                                <addDependencies>false</addDependencies>
+                                <preCp>anything</preCp>
+                            </classPath>
+                            <jre>
+                                <path>%JAVA_HOME%;%PATH%</path>
+                                <minVersion>11</minVersion>
+                            </jre>
+                            <versionInfo>
+                                <fileVersion>${project.version}.0.0</fileVersion>
+                                <txtFileVersion>${project.version}</txtFileVersion>
+                                <fileDescription>Uno strumento interattivo per il calcolo con il Metodo del Simplesso.</fileDescription>
+                                <copyright>(C) 2009-2023 Alessandro Putzu</copyright>
+                                <productVersion>${project.version}.0.0</productVersion>
+                                <txtProductVersion>${project.version}</txtProductVersion>
+                                <productName>Simply - Simplex Tool</productName>
+                                <internalName>SimplexTool</internalName>
+                                <originalFilename>SimplexTool.exe</originalFilename>
+                                <language>ITALIAN</language>
+                                <companyName>https://github.com/silma85</companyName>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>assembly</id>
+                        <phase>package</phase>
+                        <goals><goal>single</goal></goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
